@@ -1,0 +1,47 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+
+# build
+build/
+dist/
+
+# env files
+.env
+.env*.local
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# os files
+.DS_Store
+Thumbs.db
+
+# IDE (keep .vscode/settings.json if needed, ignore the rest)
+*.swp
+*.swo
+
+# supabase local
+supabase/.temp/
+
+# docker
+.docker/
+
+# misc
+*.pem
+tmpclaude-*
