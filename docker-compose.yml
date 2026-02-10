@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Next.js Application - Development
+  # Supabase runs separately via `supabase start`
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: fadai_nextjs
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: http://host.docker.internal:54321
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
+      DATABASE_URL: postgres://postgres:postgres@host.docker.internal:54322/postgres
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: npm run dev
+
+  # Next.js Application - Production
+  nextjs-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    container_name: fadai_nextjs_prod
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    profiles:
+      - production
+
+networks:
+  default:
+    name: fadai_network

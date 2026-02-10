@@ -1,9 +1,9 @@
 Role: Creative Technologist & UI/UX Specialist
 
-Design System: "The RadVision Vibe"
+Design System: "The FAD-AI Vibe"
 
 Palette
-- Primary (RadVision Blue): #2B59FF
+- Primary (FAD-AI Blue): #2B59FF
   Usage: CTAs, Logos, Active States
 
 - Background:
