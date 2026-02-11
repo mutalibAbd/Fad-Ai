@@ -1,7 +1,7 @@
 import ProductForm from '@/components/admin/ProductForm';
 
 export const metadata = {
-  title: 'Yeni Məhsul | Admin | FAD-AI',
+  title: 'Yeni Məhsul | Admin | FADAI',
 };
 
 export default function NewProductPage() {

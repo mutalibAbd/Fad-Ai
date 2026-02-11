@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getVisibleProducts } from '@/lib/queries/products';
 
 export const metadata = {
-  title: 'Məhsullar | FAD-AI',
+  title: 'Məhsullar | FADAI',
   description: 'Tibbi görüntüləmə və süni intellekt əsaslı diaqnostika məhsulları',
 };
 

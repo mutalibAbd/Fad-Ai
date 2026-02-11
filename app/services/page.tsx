@@ -1,9 +1,10 @@
-import { GlassHeader, SoftCard } from '@/components/ui';
+import { GlassHeader } from '@/components/ui';
 import Link from 'next/link';
 import { getVisibleServices } from '@/lib/queries/services';
+import ServiceSection from './ServiceSection';
 
 export const metadata = {
-  title: 'Xidmətlər | FAD-AI',
+  title: 'Xidmətlər | FADAI',
   description: 'Tibbi görüntüləmə sistemləri üçün peşəkar xidmətlər və konsultasiya',
 };
 
@@ -31,49 +32,21 @@ export default async function ServicesPage() {
           </div>
         </section>
 
-        {/* Services Grid */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {services.map((service) => {
-                const details = Array.isArray(service.details) ? service.details as string[] : [];
-                return (
-                  <SoftCard key={service.id} className="p-8 flex flex-col">
-                    {/* Icon */}
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                      <span className="text-4xl">{service.icon}</span>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-xl font-semibold tracking-tight text-text-primary mb-3">
-                      {service.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-text-secondary tracking-tight leading-relaxed mb-6">
-                      {service.description}
-                    </p>
-
-                    {/* Details List */}
-                    {details.length > 0 && (
-                      <ul className="space-y-2 mt-auto">
-                        {details.map((detail, index) => (
-                          <li
-                            key={index}
-                            className="text-sm text-text-secondary tracking-tight flex items-start"
-                          >
-                            <span className="text-primary mr-2 flex-shrink-0">•</span>
-                            <span>{detail}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </SoftCard>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        {/* Service Sections */}
+        {services.map((service, index) => {
+          const details = Array.isArray(service.details) ? service.details as string[] : [];
+          return (
+            <ServiceSection
+              key={service.id}
+              title={service.title}
+              description={service.description ?? ''}
+              icon={service.icon ?? ''}
+              imageUrl={(service as any).image_url ?? ''}
+              details={details}
+              index={index}
+            />
+          );
+        })}
 
         {/* CTA Section */}
         <section className="py-24 bg-background-light">

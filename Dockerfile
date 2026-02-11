@@ -1,5 +1,5 @@
 # =====================================================
-# FAD-AI - Multi-Stage Next.js Dockerfile
+# FADAI - Multi-Stage Next.js Dockerfile
 # =====================================================
 # Architecture: Multi-stage build for optimal image size
 # Stages:

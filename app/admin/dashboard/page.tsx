@@ -2,7 +2,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
 
 export const metadata = {
-  title: 'Dashboard | Admin | FAD-AI',
+  title: 'Dashboard | Admin | FADAI',
 };
 
 export default async function AdminDashboardPage() {

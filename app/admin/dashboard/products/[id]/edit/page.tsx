@@ -4,7 +4,7 @@ import type { Database } from '@/lib/supabase/database.types';
 import ProductForm from '@/components/admin/ProductForm';
 
 export const metadata = {
-  title: 'Məhsulu Redaktə Et | Admin | FAD-AI',
+  title: 'Məhsulu Redaktə Et | Admin | FADAI',
 };
 
 export default async function EditProductPage({

@@ -4,7 +4,7 @@ import type { Database } from '@/lib/supabase/database.types';
 import StandardForm from '@/components/admin/StandardForm';
 
 export const metadata = {
-  title: 'Standartı Redaktə Et | Admin | FAD-AI',
+  title: 'Standartı Redaktə Et | Admin | FADAI',
 };
 
 export default async function EditStandardPage({

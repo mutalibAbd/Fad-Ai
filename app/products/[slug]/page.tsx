@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: ProductPageProps) {
   const product = await getProductBySlug(slug);
 
   if (!product) {
-    return { title: 'Məhsul tapılmadı | FAD-AI' };
+    return { title: 'Məhsul tapılmadı | FADAI' };
   }
 
   return {
-    title: `${product.title} | FAD-AI`,
-    description: product.description || 'FAD-AI məhsulu',
+    title: `${product.title} | FADAI`,
+    description: product.description || 'FADAI məhsulu',
   };
 }
 

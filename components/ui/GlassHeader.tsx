@@ -22,7 +22,7 @@ const defaultNavLinks: NavLink[] = [
   { label: 'Haqqımızda', href: '/about' },
 ];
 
-export default function GlassHeader({ logo = 'FAD-AI', navLinks = defaultNavLinks }: GlassHeaderProps) {
+export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks }: GlassHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (

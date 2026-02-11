@@ -4,7 +4,7 @@ import type { Database } from '@/lib/supabase/database.types';
 import ServiceForm from '@/components/admin/ServiceForm';
 
 export const metadata = {
-  title: 'Xidməti Redaktə Et | Admin | FAD-AI',
+  title: 'Xidməti Redaktə Et | Admin | FADAI',
 };
 
 export default async function EditServicePage({
@@ -49,6 +49,7 @@ export default async function EditServicePage({
           title: service.title ?? '',
           description: service.description ?? '',
           details,
+          image_url: (service as any).image_url ?? '',
           sort_order: service.sort_order ?? 0,
           is_visible: service.is_visible ?? true,
         }}

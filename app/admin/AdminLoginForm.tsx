@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { signIn } from '@/lib/actions/auth';
 
 export default function AdminLoginForm() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,6 +21,8 @@ export default function AdminLoginForm() {
     if (result?.error) {
       setError(result.error);
       setLoading(false);
+    } else {
+      router.push('/admin/dashboard');
     }
   };
 
@@ -35,7 +39,7 @@ export default function AdminLoginForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
           className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-          placeholder="admin@fad-ai.com"
+          placeholder="admin@fadai.com"
         />
       </div>
 

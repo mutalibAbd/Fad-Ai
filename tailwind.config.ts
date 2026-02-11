@@ -8,7 +8,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Primary FAD-AI Blue
+        // Primary FADAI Blue
         primary: {
           DEFAULT: '#2B59FF',
           50: '#F0F4FF',

@@ -5,7 +5,7 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import ProductListClient from './ProductListClient';
 
 export const metadata = {
-  title: 'Məhsullar | Admin | FAD-AI',
+  title: 'Məhsullar | Admin | FADAI',
 };
 
 export default async function AdminProductsPage() {

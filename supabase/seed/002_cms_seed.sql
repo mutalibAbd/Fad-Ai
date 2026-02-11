@@ -1,5 +1,5 @@
 -- =====================================================
--- FAD-AI - CMS Seed Data
+-- FADAI - CMS Seed Data
 -- =====================================================
 -- Migrates all hardcoded content from pages into DB
 -- =====================================================
@@ -140,8 +140,8 @@ INSERT INTO site_settings (key, value) VALUES
     "cta_secondary_url": "/about"
   }'),
   ('about', '{
-    "story_title": "FAD-AI haqqinda",
-    "story_text": "FAD-AI tibbi goruntuleme sahesinde suni intellekt texnologiyalarini tetbiq eden innovativ sirketdir. Missiyamiz tibbi diaqnostikanin deqiqliyini ve semereli̇li̇yi̇ni̇ artirmaqdır.",
+    "story_title": "FADAI haqqinda",
+    "story_text": "FADAI tibbi goruntuleme sahesinde suni intellekt texnologiyalarini tetbiq eden innovativ sirketdir. Missiyamiz tibbi diaqnostikanin deqiqliyini ve semereli̇li̇yi̇ni̇ artirmaqdır.",
     "mission_text": "Tibbi goruntuleme sahesinde en son texnologiyalarin tetbiqi ile sehiyye sektoruna tohe vermek."
   }'),
   ('about_stats', '[
@@ -151,7 +151,7 @@ INSERT INTO site_settings (key, value) VALUES
     {"label": "Komanda uzvu", "value": "15+"}
   ]'),
   ('contact_info', '{
-    "email": "info@fad-ai.com",
+    "email": "info@fadai.com",
     "phone": "+994 XX XXX XX XX",
     "address": "Baki, Azerbaycan"
   }'),
@@ -172,7 +172,7 @@ INSERT INTO site_settings (key, value) VALUES
 -- =====================================================
 
 INSERT INTO team_members (name, role, bio, sort_order) VALUES
-  ('FAD-AI Komandasi', 'Umumi Rehber', 'Tibbi goruntuleme sahesinde tecrubeli mutexessisler komandasi.', 1);
+  ('FADAI Komandasi', 'Umumi Rehber', 'Tibbi goruntuleme sahesinde tecrubeli mutexessisler komandasi.', 1);
 
 -- =====================================================
 -- END OF SEED DATA

@@ -3,7 +3,7 @@ import { GlassHeader } from '@/components/ui';
 import ProjectsClient from './ProjectsClient';
 
 export const metadata = {
-  title: 'Layihələr | FAD-AI',
+  title: 'Layihələr | FADAI',
   description: 'Tibbi görüntüləmə sahəsində həyata keçirilən layihələrimiz',
 };
 

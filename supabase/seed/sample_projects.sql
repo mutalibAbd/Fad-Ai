@@ -1,5 +1,5 @@
 -- =====================================================
--- FAD-AI - Projects Sample Data
+-- FADAI - Projects Sample Data
 -- =====================================================
 -- Description: Sample projects for testing the UI
 -- Usage: Run this after running the initial migration

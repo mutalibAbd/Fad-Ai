@@ -1,7 +1,7 @@
 import ProjectForm from '@/components/admin/ProjectForm';
 
 export const metadata = {
-  title: 'Yeni Layihə | Admin | FAD-AI',
+  title: 'Yeni Layihə | Admin | FADAI',
 };
 
 export default function NewProjectPage() {

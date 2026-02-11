@@ -2,7 +2,7 @@ import { getContactInfo, getSocialLinks } from '@/lib/queries/site-settings';
 import SettingsEditorClient from './SettingsEditorClient';
 
 export const metadata = {
-  title: 'Ayarlar | Admin | FAD-AI',
+  title: 'Ayarlar | Admin | FADAI',
 };
 
 export default async function AdminSettingsPage() {

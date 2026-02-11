@@ -4,7 +4,7 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import StandardListClient from './StandardListClient';
 
 export const metadata = {
-  title: 'Standartlar | Admin | FAD-AI',
+  title: 'Standartlar | Admin | FADAI',
 };
 
 export default async function AdminStandardsPage() {

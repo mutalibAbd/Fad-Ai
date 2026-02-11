@@ -4,7 +4,7 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import ServiceListClient from './ServiceListClient';
 
 export const metadata = {
-  title: 'Xidmətlər | Admin | FAD-AI',
+  title: 'Xidmətlər | Admin | FADAI',
 };
 
 export default async function AdminServicesPage() {

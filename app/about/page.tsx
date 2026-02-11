@@ -3,8 +3,8 @@ import { getAboutContent, getAboutStats, getSocialLinks } from '@/lib/queries/si
 import { getVisibleTeamMembers } from '@/lib/queries/team';
 
 export const metadata = {
-  title: 'Haqqımızda | FAD-AI',
-  description: 'FAD-AI haqqında - tibbi görüntüləmə sahəsində innovativ həllər',
+  title: 'Haqqımızda | FADAI',
+  description: 'FADAI haqqında - tibbi görüntüləmə sahəsində innovativ həllər',
 };
 
 export const revalidate = 60;

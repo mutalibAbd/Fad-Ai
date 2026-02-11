@@ -4,10 +4,11 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function createService(data: {
-  icon: string
+  icon?: string
   title: string
   description?: string
   details?: string[]
+  image_url?: string
   sort_order?: number
   is_visible?: boolean
 }) {
@@ -32,6 +33,7 @@ export async function updateService(id: string, data: {
   title?: string
   description?: string
   details?: string[]
+  image_url?: string | null
   sort_order?: number
   is_visible?: boolean
 }) {

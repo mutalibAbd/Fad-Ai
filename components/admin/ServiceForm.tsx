@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FormField from '@/components/admin/FormField';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface ServiceFormProps {
   initialData?: {
@@ -11,6 +12,7 @@ interface ServiceFormProps {
     title: string;
     description: string;
     details: string[];
+    image_url: string;
     sort_order: number;
     is_visible: boolean;
   };
@@ -23,6 +25,7 @@ export default function ServiceForm({ initialData }: ServiceFormProps) {
   const [icon, setIcon] = useState(initialData?.icon ?? '');
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [description, setDescription] = useState(initialData?.description ?? '');
+  const [imageUrl, setImageUrl] = useState(initialData?.image_url ?? '');
   const [detailsText, setDetailsText] = useState(
     initialData?.details ? initialData.details.join('\n') : ''
   );
@@ -47,6 +50,7 @@ export default function ServiceForm({ initialData }: ServiceFormProps) {
       title,
       description,
       details,
+      image_url: imageUrl || undefined,
       sort_order: sortOrder,
       is_visible: isVisible,
     };
@@ -89,10 +93,11 @@ export default function ServiceForm({ initialData }: ServiceFormProps) {
           name="icon"
           value={icon}
           onChange={setIcon}
-          required
-          placeholder="🛠️"
+          placeholder="🛠️ (ixtiyari)"
         />
       </div>
+
+      <ImageUpload bucket="services" value={imageUrl} onChange={setImageUrl} label="Xidmət şəkli" />
 
       <FormField
         label="Sıra"

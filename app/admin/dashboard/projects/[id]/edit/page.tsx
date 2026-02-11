@@ -4,7 +4,7 @@ import type { Database } from '@/lib/supabase/database.types';
 import ProjectForm from '@/components/admin/ProjectForm';
 
 export const metadata = {
-  title: 'Layihəni Redaktə Et | Admin | FAD-AI',
+  title: 'Layihəni Redaktə Et | Admin | FADAI',
 };
 
 export default async function EditProjectPage({

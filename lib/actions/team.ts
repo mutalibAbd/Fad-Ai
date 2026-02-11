@@ -28,9 +28,9 @@ export async function createTeamMember(data: {
 export async function updateTeamMember(id: string, data: {
   name?: string
   role?: string
-  bio?: string
-  image_url?: string
-  linkedin_url?: string
+  bio?: string | null
+  image_url?: string | null
+  linkedin_url?: string | null
   sort_order?: number
   is_visible?: boolean
 }) {

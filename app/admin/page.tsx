@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import AdminLoginForm from './AdminLoginForm';
 
 export const metadata = {
-  title: 'Admin Giriş | FAD-AI',
+  title: 'Admin Giriş | FADAI',
 };
 
 export default async function AdminPage() {
@@ -19,7 +19,7 @@ export default async function AdminPage() {
       <div className="w-full max-w-md mx-auto px-6">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-semibold tracking-tight text-primary mb-2">
-            FAD-AI
+            FADAI
           </h1>
           <p className="text-text-secondary tracking-tight">
             Admin Panel

@@ -1,7 +1,7 @@
 import StandardForm from '@/components/admin/StandardForm';
 
 export const metadata = {
-  title: 'Yeni Standart | Admin | FAD-AI',
+  title: 'Yeni Standart | Admin | FADAI',
 };
 
 export default function NewStandardPage() {

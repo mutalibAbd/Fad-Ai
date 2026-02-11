@@ -2,7 +2,7 @@ import { GlassHeader, SoftCard } from '@/components/ui';
 import { getMainStandards, getAdditionalStandards, getBiometricIndicators } from '@/lib/queries/standards';
 
 export const metadata = {
-  title: 'Standart Protokollar | FAD-AI',
+  title: 'Standart Protokollar | FADAI',
   description: 'Beynəlxalq tibbi standartlara uyğunluq və biometrik göstəricilər',
 };
 

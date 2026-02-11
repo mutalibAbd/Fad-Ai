@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'FAD-AI - Tibbi Görüntüləmədə Digital Symphony',
+  title: 'FADAI - Tibbi Görüntüləmədə Digital Symphony',
   description: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi - innovativ süni intellekt texnologiyası',
 };
 

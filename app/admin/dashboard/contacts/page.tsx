@@ -3,7 +3,7 @@ import type { Database } from '@/lib/supabase/database.types';
 import ContactsListClient from './ContactsListClient';
 
 export const metadata = {
-  title: 'Müraciətlər | Admin | FAD-AI',
+  title: 'Müraciətlər | Admin | FADAI',
 };
 
 export default async function AdminContactsPage() {

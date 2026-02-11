@@ -1,5 +1,5 @@
 -- =====================================================
--- FAD-AI - Full CMS Tables Migration
+-- FADAI - Full CMS Tables Migration
 -- =====================================================
 -- Description: Creates all tables needed for the CMS:
 --   products, product_features, product_images,

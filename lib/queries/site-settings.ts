@@ -46,8 +46,8 @@ export async function getHeroContent(): Promise<HeroContent> {
 export async function getAboutContent(): Promise<AboutContent> {
   const value = await getSiteSetting('about')
   const defaults: AboutContent = {
-    story_title: 'FAD-AI haqqında',
-    story_text: 'FAD-AI tibbi görüntüləmə sahəsində süni intellekt texnologiyalarını tətbiq edən innovativ şirkətdir.',
+    story_title: 'FADAI haqqında',
+    story_text: 'FADAI tibbi görüntüləmə sahəsində süni intellekt texnologiyalarını tətbiq edən innovativ şirkətdir.',
     mission_text: 'Tibbi görüntüləmə sahəsində ən son texnologiyaların tətbiqi ilə səhiyyə sektoruna töhfə vermək.',
   }
 
@@ -71,7 +71,7 @@ export async function getAboutStats(): Promise<AboutStat[]> {
 export async function getContactInfo(): Promise<ContactInfo> {
   const value = await getSiteSetting('contact_info')
   const defaults: ContactInfo = {
-    email: 'info@fad-ai.com',
+    email: 'info@fadai.com',
     phone: '+994 XX XXX XX XX',
     address: 'Bakı, Azərbaycan',
   }

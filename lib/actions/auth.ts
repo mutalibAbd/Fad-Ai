@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-export async function signIn(email: string, password: string): Promise<{ error?: string }> {
+export async function signIn(email: string, password: string): Promise<{ error?: string; success?: boolean }> {
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -15,7 +15,7 @@ export async function signIn(email: string, password: string): Promise<{ error?:
     return { error: error.message }
   }
 
-  redirect('/admin/dashboard')
+  return { success: true }
 }
 
 export async function signOut() {

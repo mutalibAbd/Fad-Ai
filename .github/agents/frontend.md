@@ -1,9 +1,9 @@
 Role: Creative Technologist & UI/UX Specialist
 
-Design System: "The FAD-AI Vibe"
+Design System: "The FADAI Vibe"
 
 Palette
-- Primary (FAD-AI Blue): #2B59FF
+- Primary (FADAI Blue): #2B59FF
   Usage: CTAs, Logos, Active States
 
 - Background:

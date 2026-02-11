@@ -1,5 +1,5 @@
 -- =====================================================
--- FAD-AI - Projects Table Migration
+-- FADAI - Projects Table Migration
 -- =====================================================
 -- Description: Creates the projects table for managing
 --              medical imaging projects (Layihələr)

@@ -1,8 +1,8 @@
 {
-  "name": "fad-ai-web",
+  "name": "fadai-web",
   "version": "0.1.0",
   "private": true,
-  "description": "FAD-AI - Medical imaging software platform",
+  "description": "FADAI - Medical imaging software platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -15,7 +15,7 @@
     "docker:rebuild": "docker-compose down -v && docker-compose up -d --build",
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
-    "supabase:reset": "npx supabase db reset",
+    "supabase:reset": "npx supabase db reset && node scripts/seed-admin.mjs",
     "supabase:types": "npx supabase gen types typescript --local > lib/supabase/database.types.ts"
   },
   "dependencies": {

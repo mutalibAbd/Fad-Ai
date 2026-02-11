@@ -1,7 +1,7 @@
 import ServiceForm from '@/components/admin/ServiceForm';
 
 export const metadata = {
-  title: 'Yeni Xidmət | Admin | FAD-AI',
+  title: 'Yeni Xidmət | Admin | FADAI',
 };
 
 export default function NewServicePage() {

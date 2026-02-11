@@ -24,7 +24,7 @@ export default function AdminSidebar() {
       {/* Logo */}
       <div className="px-6 py-6 border-b border-slate-100">
         <Link href="/admin/dashboard" className="text-xl font-semibold tracking-tight text-primary">
-          FAD-AI
+          FADAI
         </Link>
         <p className="text-xs text-text-secondary tracking-tight mt-1">Admin Panel</p>
       </div>

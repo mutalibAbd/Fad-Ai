@@ -3,8 +3,8 @@ import { getContactInfo, getSocialLinks } from '@/lib/queries/site-settings';
 import ContactForm from './ContactForm';
 
 export const metadata = {
-  title: 'Əlaqə | FAD-AI',
-  description: 'FAD-AI ilə əlaqə saxlayın',
+  title: 'Əlaqə | FADAI',
+  description: 'FADAI ilə əlaqə saxlayın',
 };
 
 export const revalidate = 60;

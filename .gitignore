@@ -32,7 +32,8 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
-# IDE (keep .vscode/settings.json if needed, ignore the rest)
+# IDE
+.vscode/mcp.json
 *.swp
 *.swo
 

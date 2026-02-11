@@ -3,7 +3,7 @@ import { getHeroContent, getHomepageServices } from '@/lib/queries/site-settings
 import HomepageEditorClient from './HomepageEditorClient';
 
 export const metadata = {
-  title: 'Ana Səhifə | Admin | FAD-AI',
+  title: 'Ana Səhifə | Admin | FADAI',
 };
 
 export default async function AdminHomepagePage() {

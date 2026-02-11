@@ -4,7 +4,7 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import ProjectListClient from './ProjectListClient';
 
 export const metadata = {
-  title: 'Layihələr | Admin | FAD-AI',
+  title: 'Layihələr | Admin | FADAI',
 };
 
 export default async function AdminProjectsPage() {

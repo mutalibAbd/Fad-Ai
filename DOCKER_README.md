@@ -1,4 +1,4 @@
-# FAD-AI - Docker & Supabase Setup
+# FADAI - Docker & Supabase Setup
 
 ## Architecture Overview
 

@@ -4,7 +4,7 @@ import { getAboutContent, getAboutStats } from '@/lib/queries/site-settings';
 import AboutEditorClient from './AboutEditorClient';
 
 export const metadata = {
-  title: 'Haqqımızda | Admin | FAD-AI',
+  title: 'Haqqımızda | Admin | FADAI',
 };
 
 export default async function AdminAboutPage() {
