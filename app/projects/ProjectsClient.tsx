@@ -2,6 +2,7 @@
 
 import { Tab } from '@headlessui/react';
 import { SoftCard } from '@/components/ui';
+import Image from 'next/image';
 import type { Project } from '@/lib/queries/projects';
 
 interface ProjectsClientProps {
@@ -78,10 +79,12 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
                       {/* Project Image */}
                       {project.image_url ? (
                         <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 relative">
-                          <img
+                          <Image
                             src={project.image_url}
                             alt={project.title}
-                            className="w-full h-full object-cover"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           />
                         </div>
                       ) : (

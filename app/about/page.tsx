@@ -1,5 +1,7 @@
 import { GlassHeader, SoftCard } from '@/components/ui';
 import Footer from '@/components/ui/Footer';
+import Image from 'next/image';
+import { PersonIcon } from '@/components/icons';
 import { getAboutContent, getAboutStats, getSocialLinks } from '@/lib/queries/site-settings';
 import { getVisibleTeamMembers } from '@/lib/queries/team';
 
@@ -8,7 +10,7 @@ export const metadata = {
   description: 'FADAI haqqında - tibbi görüntüləmə sahəsində innovativ həllər',
 };
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export default async function AboutPage() {
   const [about, stats, teamMembers, socialLinks] = await Promise.all([
@@ -89,17 +91,18 @@ export default async function AboutPage() {
                 {teamMembers.map((member) => (
                   <SoftCard key={member.id} className="p-8 text-center">
                     {/* Avatar */}
-                    <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                    <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6 relative overflow-hidden">
                       {member.image_url ? (
-                        <img
+                        <Image
                           src={member.image_url}
                           alt={member.name}
+                          width={96}
+                          height={96}
                           className="w-24 h-24 rounded-full object-cover"
+                          sizes="96px"
                         />
                       ) : (
-                        <svg className="w-10 h-10 text-primary/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                        </svg>
+                        <PersonIcon className="w-10 h-10 text-primary/40" />
                       )}
                     </div>
                     <h3 className="text-xl font-semibold tracking-tight text-text-primary mb-1">

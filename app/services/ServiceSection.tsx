@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 interface ServiceSectionProps {
   title: string;
@@ -100,11 +101,13 @@ export default function ServiceSection({
             style={{ transitionDelay: visible ? '150ms' : '0ms' }}
           >
             {imageUrl ? (
-              <div className="rounded-2xl overflow-hidden shadow-sm border border-slate-100">
-                <img
+              <div className="rounded-2xl overflow-hidden shadow-sm border border-slate-100 relative aspect-[4/3]">
+                <Image
                   src={imageUrl}
                   alt={title}
-                  className="w-full h-auto object-cover aspect-[4/3]"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
             ) : (

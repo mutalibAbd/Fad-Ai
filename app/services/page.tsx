@@ -9,7 +9,7 @@ export const metadata = {
   description: 'Tibbi görüntüləmə sistemləri üçün peşəkar xidmətlər və konsultasiya',
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function ServicesPage() {
   const services = await getVisibleServices();

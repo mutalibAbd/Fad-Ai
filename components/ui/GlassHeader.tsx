@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@headlessui/react';
+import { CloseIcon } from '@/components/icons';
 
 interface NavLink {
   label: string;
@@ -91,10 +92,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
               aria-label="Menyunu bağla"
             >
               <span className="text-2xl text-text-primary">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <line x1="4" y1="4" x2="16" y2="16" />
-                  <line x1="16" y1="4" x2="4" y2="16" />
-                </svg>
+                <CloseIcon className="w-5 h-5" />
               </span>
             </button>
           </div>

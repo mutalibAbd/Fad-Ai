@@ -1,5 +1,6 @@
 import { GlassHeader, SoftCard } from '@/components/ui';
 import Footer from '@/components/ui/Footer';
+import { CheckIcon } from '@/components/icons';
 import { getMainStandards, getAdditionalStandards, getBiometricIndicators } from '@/lib/queries/standards';
 
 export const metadata = {
@@ -7,15 +8,7 @@ export const metadata = {
   description: 'Beynəlxalq tibbi standartlara uyğunluq və biometrik göstəricilər',
 };
 
-export const revalidate = 60;
-
-function CheckIcon() {
-  return (
-    <svg className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-    </svg>
-  );
-}
+export const revalidate = 3600;
 
 export default async function StandardsPage() {
   const [standardProtocols, additionalStandards, biometricIndicators] = await Promise.all([

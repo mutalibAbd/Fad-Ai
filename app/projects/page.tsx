@@ -8,7 +8,7 @@ export const metadata = {
   description: 'Tibbi görüntüləmə sahəsində həyata keçirilən layihələrimiz',
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function ProjectsPage() {
   const projects = await getVisibleProjects();

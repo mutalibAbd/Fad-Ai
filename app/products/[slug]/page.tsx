@@ -1,5 +1,6 @@
 import { GlassHeader, SoftCard } from '@/components/ui';
 import Footer from '@/components/ui/Footer';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getAllProductSlugs } from '@/lib/queries/products';
@@ -71,12 +72,15 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </div>
 
               {/* Product Image */}
-              <div className="rounded-2xl bg-white shadow-card border border-slate-100 overflow-hidden aspect-video flex items-center justify-center">
+              <div className="rounded-2xl bg-white shadow-card border border-slate-100 overflow-hidden aspect-video relative">
                 {product.image_url ? (
-                  <img
+                  <Image
                     src={product.image_url}
                     alt={product.title}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
@@ -136,11 +140,13 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {product.images.map((image) => (
-                  <div key={image.id} className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
-                    <img
+                  <div key={image.id} className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative aspect-video">
+                    <Image
                       src={image.image_url}
                       alt={image.alt_text || product.title}
-                      className="w-full h-auto object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
                 ))}
