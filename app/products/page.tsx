@@ -1,4 +1,5 @@
 import { GlassHeader, SoftCard } from '@/components/ui';
+import Footer from '@/components/ui/Footer';
 import Link from 'next/link';
 import { getVisibleProducts } from '@/lib/queries/products';
 
@@ -18,21 +19,22 @@ export default async function ProductsPage() {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-24 bg-background-light">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-4">
-              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-6">
-                Məhsullar
-              </h1>
-              <p className="text-xl text-text-secondary tracking-tight max-w-2xl mx-auto">
-                Tibbi görüntüləmə və süni intellekt əsaslı diaqnostika həlləri
-              </p>
-            </div>
+        <section className="py-20 bg-background-light">
+          <div className="max-w-7xl mx-auto px-6 text-center">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">
+              Kataloq
+            </p>
+            <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-4">
+              Məhsullar
+            </h1>
+            <p className="text-xl text-text-secondary tracking-tight max-w-xl mx-auto">
+              Tibbi görüntüləmə və süni intellekt əsaslı diaqnostika həlləri
+            </p>
           </div>
         </section>
 
         {/* Products Grid */}
-        <section className="py-24">
+        <section className="py-16">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {products.map((product) => (
@@ -60,7 +62,7 @@ export default async function ProductsPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-background-light">
+        <section className="py-20 bg-background-light">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-text-primary mb-6">
               Məhsullarımız haqqında ətraflı məlumat almaq istəyirsiniz?
@@ -70,13 +72,15 @@ export default async function ProductsPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-block bg-primary text-white px-8 py-4 rounded-2xl font-medium tracking-tight hover:bg-primary-600 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+              className="inline-block bg-primary text-white px-8 py-4 rounded-xl font-medium tracking-tight hover:bg-primary-600 transition-colors duration-200"
             >
               Demo Tələb Et
             </Link>
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 }

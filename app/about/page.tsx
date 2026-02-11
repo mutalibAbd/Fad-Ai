@@ -1,4 +1,5 @@
 import { GlassHeader, SoftCard } from '@/components/ui';
+import Footer from '@/components/ui/Footer';
 import { getAboutContent, getAboutStats, getSocialLinks } from '@/lib/queries/site-settings';
 import { getVisibleTeamMembers } from '@/lib/queries/team';
 
@@ -23,12 +24,13 @@ export default async function AboutPage() {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-24 bg-background-light">
+        <section className="py-20 bg-background-light">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-4">
-              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-6">
+              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-4">
                 Haqqımızda
               </h1>
+              <div className="w-10 h-0.5 bg-primary mx-auto mb-6" />
               <p className="text-xl text-text-secondary tracking-tight max-w-2xl mx-auto">
                 Tibbi görüntüləmə sahəsində innovativ həllər təqdim edən komanda
               </p>
@@ -37,7 +39,7 @@ export default async function AboutPage() {
         </section>
 
         {/* Company Story */}
-        <section className="py-24">
+        <section className="py-16">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
               {about.story_title}
@@ -58,7 +60,7 @@ export default async function AboutPage() {
 
         {/* Stats */}
         {stats.length > 0 && (
-          <section className="py-24 bg-background-light">
+          <section className="py-14 bg-background-light">
             <div className="max-w-7xl mx-auto px-6">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {stats.map((stat, index) => (
@@ -78,7 +80,7 @@ export default async function AboutPage() {
 
         {/* Team Members */}
         {teamMembers.length > 0 && (
-          <section className="py-24">
+          <section className="py-20">
             <div className="max-w-7xl mx-auto px-6">
               <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-12 text-center">
                 Komandamız
@@ -95,7 +97,9 @@ export default async function AboutPage() {
                           className="w-24 h-24 rounded-full object-cover"
                         />
                       ) : (
-                        <span className="text-4xl text-primary/50">👤</span>
+                        <svg className="w-10 h-10 text-primary/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                        </svg>
                       )}
                     </div>
                     <h3 className="text-xl font-semibold tracking-tight text-text-primary mb-1">
@@ -128,7 +132,7 @@ export default async function AboutPage() {
 
         {/* Social Links */}
         {(socialLinks.facebook || socialLinks.instagram || socialLinks.linkedin || socialLinks.youtube) && (
-          <section className="py-24 bg-background-light">
+          <section className="py-14 bg-background-light">
             <div className="max-w-4xl mx-auto px-6 text-center">
               <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
                 Bizi izləyin
@@ -159,6 +163,8 @@ export default async function AboutPage() {
           </section>
         )}
       </main>
+
+      <Footer />
     </>
   );
 }

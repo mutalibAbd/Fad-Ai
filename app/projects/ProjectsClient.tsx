@@ -21,6 +21,16 @@ const STATUS_BADGES = {
   completed: { label: 'Tamamlanmış', color: 'bg-green-100 text-green-800' },
 };
 
+const AZ_MONTHS = [
+  'yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun',
+  'iyul', 'avqust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr',
+];
+
+function formatDateAz(dateStr: string): string {
+  const d = new Date(dateStr);
+  return `${d.getDate()} ${AZ_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+
 export default function ProjectsClient({ projects }: ProjectsClientProps) {
   const filterProjects = (status: string) => {
     if (status === 'all') return projects;
@@ -104,13 +114,9 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
                         )}
 
                         {/* Created Date */}
-                        <p className="text-sm text-text-secondary mt-4 tracking-tight">
-                          {new Date(project.created_at).toLocaleDateString('az-AZ', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </p>
+                        <span className="block text-sm text-text-secondary mt-4 tracking-tight">
+                          {formatDateAz(project.created_at)}
+                        </span>
                       </div>
                     </SoftCard>
                   ))}

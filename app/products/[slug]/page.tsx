@@ -1,4 +1,5 @@
 import { GlassHeader, SoftCard } from '@/components/ui';
+import Footer from '@/components/ui/Footer';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getAllProductSlugs } from '@/lib/queries/products';
@@ -48,7 +49,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-24 bg-background-light">
+        <section className="py-20 bg-background-light">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
@@ -63,7 +64,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 </p>
                 <Link
                   href="/contact"
-                  className="inline-block bg-primary text-white px-8 py-4 rounded-2xl font-medium tracking-tight hover:bg-primary-600 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+                  className="inline-block bg-primary text-white px-8 py-4 rounded-xl font-medium tracking-tight hover:bg-primary-600 transition-colors duration-200"
                 >
                   Əlaqə saxlayın
                 </Link>
@@ -89,7 +90,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
         {/* Long Description */}
         {product.long_description && (
-          <section className="py-24">
+          <section className="py-16">
             <div className="max-w-4xl mx-auto px-6">
               <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
                 Ətraflı Məlumat
@@ -103,14 +104,14 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
         {/* Features */}
         {product.features.length > 0 && (
-          <section className="py-24 bg-background-light">
+          <section className="py-20 bg-background-light">
             <div className="max-w-7xl mx-auto px-6">
               <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-12 text-center">
                 Xüsusiyyətlər
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {product.features.map((feature) => (
-                  <SoftCard key={feature.id} className="p-8">
+                  <SoftCard key={feature.id} className="p-8" hover={false}>
                     <h3 className="text-lg font-semibold tracking-tight text-text-primary mb-3">
                       {feature.title}
                     </h3>
@@ -128,7 +129,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
         {/* Gallery */}
         {product.images.length > 0 && (
-          <section className="py-24">
+          <section className="py-16">
             <div className="max-w-7xl mx-auto px-6">
               <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-12 text-center">
                 Qalereya
@@ -150,7 +151,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
         {/* Specifications */}
         {specs && Object.keys(specs).length > 0 && (
-          <section className="py-24 bg-background-light">
+          <section className="py-14 bg-background-light">
             <div className="max-w-4xl mx-auto px-6">
               <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-12 text-center">
                 Spesifikasiyalar
@@ -176,7 +177,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         )}
 
         {/* CTA Section */}
-        <section className="py-24">
+        <section className="py-20">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-text-primary mb-6">
               Bu məhsul haqqında ətraflı məlumat almaq istəyirsiniz?
@@ -187,13 +188,13 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="bg-primary text-white px-8 py-4 rounded-2xl font-medium tracking-tight hover:bg-primary-600 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+                className="bg-primary text-white px-8 py-4 rounded-xl font-medium tracking-tight hover:bg-primary-600 transition-colors duration-200"
               >
                 Əlaqə Saxlayın
               </Link>
               <Link
                 href="/products"
-                className="bg-white text-text-primary px-8 py-4 rounded-2xl font-medium tracking-tight border border-slate-100 hover:border-slate-200 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+                className="bg-slate-50 text-text-primary px-8 py-4 rounded-xl font-medium tracking-tight border border-slate-200 hover:bg-slate-100 transition-colors duration-200"
               >
                 Bütün Məhsullar
               </Link>
@@ -201,6 +202,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 }

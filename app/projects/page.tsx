@@ -1,5 +1,6 @@
 import { getVisibleProjects } from '@/lib/queries/projects';
 import { GlassHeader } from '@/components/ui';
+import Footer from '@/components/ui/Footer';
 import ProjectsClient from './ProjectsClient';
 
 export const metadata = {
@@ -7,10 +8,9 @@ export const metadata = {
   description: 'Tibbi görüntüləmə sahəsində həyata keçirilən layihələrimiz',
 };
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 60;
 
 export default async function ProjectsPage() {
-  // Backend: Fetch visible projects from Supabase
   const projects = await getVisibleProjects();
 
   return (
@@ -19,26 +19,31 @@ export default async function ProjectsPage() {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-24 bg-background-light">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-4">
-              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-6">
-                Layihələr
-              </h1>
-              <p className="text-xl text-text-secondary tracking-tight max-w-2xl mx-auto">
-                Tibbi görüntüləmə sahəsində innovativ həllər və tətbiqlər
-              </p>
-            </div>
+        <section className="py-20 bg-background-light">
+          <div className="max-w-7xl mx-auto px-6 text-center">
+            <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-4">
+              Layihələr
+            </h1>
+            <p className="text-xl text-text-secondary tracking-tight max-w-xl mx-auto">
+              Tibbi görüntüləmə sahəsində innovativ həllər və tətbiqlər
+            </p>
+            {projects.length > 0 && (
+              <span className="inline-block mt-4 text-sm font-medium text-text-secondary bg-white border border-slate-200 rounded-lg px-3 py-1">
+                {projects.length} layihə
+              </span>
+            )}
           </div>
         </section>
 
         {/* Projects Grid with Tabs */}
-        <section className="py-24">
+        <section className="py-16">
           <div className="max-w-7xl mx-auto px-6">
             <ProjectsClient projects={projects} />
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 }

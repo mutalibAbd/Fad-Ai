@@ -26,7 +26,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-slate-100">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-100">
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="text-2xl font-semibold tracking-tight text-primary">
@@ -34,7 +34,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
         </Link>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -49,7 +49,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
         {/* Desktop CTA Button */}
         <Link
           href="/contact"
-          className="hidden md:inline-block bg-primary text-white px-6 py-2 rounded-xl font-medium tracking-tight hover:bg-primary-600 transition-all duration-300"
+          className="hidden md:inline-block bg-primary text-white px-6 py-2 rounded-lg font-medium tracking-tight hover:bg-primary-600 transition-colors duration-200"
         >
           Əlaqə
         </Link>
@@ -75,7 +75,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
         onClose={setMobileMenuOpen}
       >
         <div className="fixed inset-0 z-50" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white/95 backdrop-blur-md px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-slate-100">
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-slate-100">
           <div className="flex items-center justify-between">
             <Link
               href="/"
@@ -90,7 +90,12 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Menyunu bağla"
             >
-              <span className="text-2xl text-text-primary">✕</span>
+              <span className="text-2xl text-text-primary">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <line x1="4" y1="4" x2="16" y2="16" />
+                  <line x1="16" y1="4" x2="4" y2="16" />
+                </svg>
+              </span>
             </button>
           </div>
           <div className="mt-8 flow-root">

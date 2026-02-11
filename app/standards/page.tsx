@@ -1,4 +1,5 @@
 import { GlassHeader, SoftCard } from '@/components/ui';
+import Footer from '@/components/ui/Footer';
 import { getMainStandards, getAdditionalStandards, getBiometricIndicators } from '@/lib/queries/standards';
 
 export const metadata = {
@@ -7,6 +8,14 @@ export const metadata = {
 };
 
 export const revalidate = 60;
+
+function CheckIcon() {
+  return (
+    <svg className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+  );
+}
 
 export default async function StandardsPage() {
   const [standardProtocols, additionalStandards, biometricIndicators] = await Promise.all([
@@ -21,13 +30,13 @@ export default async function StandardsPage() {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-24 bg-background-light">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-20 bg-background-light">
+          <div className="max-w-5xl mx-auto px-6">
             <div className="text-center mb-4">
               <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-6">
                 Standart Protokollar
               </h1>
-              <p className="text-xl text-text-secondary tracking-tight max-w-2xl mx-auto">
+              <p className="text-lg text-text-primary/60 tracking-tight max-w-xl mx-auto">
                 Beynəlxalq tibbi standartlara uyğunluq və keyfiyyət təminatı
               </p>
             </div>
@@ -35,7 +44,7 @@ export default async function StandardsPage() {
         </section>
 
         {/* Main Standards Grid */}
-        <section className="py-24">
+        <section className="py-16">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-12 text-center">
               Beynəlxalq Standartlar
@@ -79,9 +88,9 @@ export default async function StandardsPage() {
                         {features.map((feature, index) => (
                           <li
                             key={index}
-                            className="text-sm text-text-secondary tracking-tight flex items-start"
+                            className="text-sm text-text-secondary tracking-tight flex items-start gap-2"
                           >
-                            <span className="text-primary mr-2 flex-shrink-0">✓</span>
+                            <CheckIcon />
                             <span>{feature}</span>
                           </li>
                         ))}
@@ -117,7 +126,7 @@ export default async function StandardsPage() {
 
         {/* Biometric Indicators Section */}
         {biometricIndicators.length > 0 && (
-          <section className="py-24 bg-background-light">
+          <section className="py-20 bg-background-light">
             <div className="max-w-7xl mx-auto px-6">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-4">
@@ -220,6 +229,8 @@ export default async function StandardsPage() {
           </section>
         )}
       </main>
+
+      <Footer />
     </>
   );
 }

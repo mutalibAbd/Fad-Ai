@@ -1,4 +1,5 @@
 import { GlassHeader } from '@/components/ui';
+import Footer from '@/components/ui/Footer';
 import Link from 'next/link';
 import { getVisibleServices } from '@/lib/queries/services';
 import ServiceSection from './ServiceSection';
@@ -19,7 +20,7 @@ export default async function ServicesPage() {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-24 bg-background-light">
+        <section className="py-20 bg-background-light border-b border-slate-100">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-4">
               <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-6">
@@ -49,7 +50,7 @@ export default async function ServicesPage() {
         })}
 
         {/* CTA Section */}
-        <section className="py-24 bg-background-light">
+        <section className="py-16 bg-background-light">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-text-primary mb-6">
               Xidmətlərimiz haqqında ətraflı məlumat almaq istəyirsiniz?
@@ -59,13 +60,15 @@ export default async function ServicesPage() {
             </p>
             <Link
               href="/contact"
-              className="inline-block bg-primary text-white px-8 py-4 rounded-2xl font-medium tracking-tight hover:bg-primary-600 transition-all duration-300 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+              className="inline-block border-2 border-primary text-primary px-8 py-4 rounded-xl font-medium tracking-tight hover:bg-primary hover:text-white transition-colors duration-200"
             >
               Bizimlə Əlaqə Saxlayın
             </Link>
           </div>
         </section>
       </main>
+
+      <Footer />
     </>
   );
 }
