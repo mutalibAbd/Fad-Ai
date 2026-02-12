@@ -54,9 +54,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <span className="text-4xl">{product.icon}</span>
-                </div>
+                {product.icon && (
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+                    <span className="text-4xl">{product.icon}</span>
+                  </div>
+                )}
                 <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-6">
                   {product.title}
                 </h1>
@@ -84,7 +86,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                    <span className="text-8xl opacity-30">{product.icon}</span>
+                    {product.icon ? (
+                      <span className="text-8xl opacity-30">{product.icon}</span>
+                    ) : (
+                      <div className="w-20 h-20 rounded-2xl bg-primary/10" />
+                    )}
                   </div>
                 )}
               </div>
