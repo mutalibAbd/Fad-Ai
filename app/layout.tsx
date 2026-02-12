@@ -11,6 +11,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'FADAI - Tibbi Görüntüləmədə Digital Symphony',
   description: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi - innovativ süni intellekt texnologiyası',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
