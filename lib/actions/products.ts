@@ -101,6 +101,24 @@ export async function createProductFeature(data: {
   return { success: true }
 }
 
+export async function updateProductFeature(id: string, data: {
+  title?: string
+  description?: string
+  sort_order?: number
+}) {
+  const supabase = createAdminClient()
+
+  const { error } = await (supabase.from('product_features') as any).update(data).eq('id', id)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/products')
+  revalidatePath('/admin/dashboard/products')
+  return { success: true }
+}
+
 export async function deleteProductFeature(id: string) {
   const supabase = createAdminClient()
 

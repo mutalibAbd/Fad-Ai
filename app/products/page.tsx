@@ -1,7 +1,8 @@
-import { GlassHeader, SoftCard } from '@/components/ui';
+import { GlassHeader } from '@/components/ui';
 import Footer from '@/components/ui/Footer';
 import Link from 'next/link';
 import { getVisibleProducts } from '@/lib/queries/products';
+import ProductsClient from './ProductsClient';
 
 export const metadata = {
   title: 'Məhsullar | FADAI',
@@ -13,13 +14,22 @@ export const revalidate = 60;
 export default async function ProductsPage() {
   const products = await getVisibleProducts();
 
+  const productData = products.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    icon: p.icon,
+    title: p.title,
+    description: p.description,
+    image_url: p.image_url,
+  }));
+
   return (
     <>
       <GlassHeader />
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-20 bg-background-light">
+        <section className="py-20 bg-background-light border-b border-slate-100">
           <div className="max-w-7xl mx-auto px-6 text-center">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">
               Kataloq
@@ -33,33 +43,8 @@ export default async function ProductsPage() {
           </div>
         </section>
 
-        {/* Products Grid */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {products.map((product) => (
-                <Link key={product.id} href={`/products/${product.slug}`}>
-                  <SoftCard className="p-8 flex flex-col h-full cursor-pointer">
-                    {/* Icon */}
-                    <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                      <span className="text-4xl">{product.icon}</span>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-xl font-semibold tracking-tight text-text-primary mb-3">
-                      {product.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-text-secondary tracking-tight leading-relaxed mb-6">
-                      {product.description}
-                    </p>
-                  </SoftCard>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Zig-Zag Products */}
+        <ProductsClient products={productData} />
 
         {/* CTA Section */}
         <section className="py-20 bg-background-light">

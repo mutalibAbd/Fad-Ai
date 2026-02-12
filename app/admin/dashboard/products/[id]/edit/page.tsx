@@ -23,6 +23,12 @@ export default async function EditProductPage({
 
   if (!product) notFound();
 
+  const { data: features } = await (supabase
+    .from('product_features') as any)
+    .select('*')
+    .eq('product_id', id)
+    .order('sort_order', { ascending: true });
+
   return (
     <div>
       <h1 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
@@ -41,6 +47,12 @@ export default async function EditProductPage({
           image_url: product.image_url ?? '',
           sort_order: product.sort_order ?? 0,
           is_visible: product.is_visible ?? true,
+          features: (features || []).map((f: any) => ({
+            id: f.id,
+            title: f.title,
+            description: f.description ?? '',
+            sort_order: f.sort_order ?? 0,
+          })),
         }}
       />
     </div>
