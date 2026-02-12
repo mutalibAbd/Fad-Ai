@@ -57,6 +57,7 @@ export interface Database {
           title: string
           description: string | null
           long_description: string | null
+          content: string | null
           specifications: Json
           image_url: string | null
           sort_order: number
@@ -71,6 +72,7 @@ export interface Database {
           title: string
           description?: string | null
           long_description?: string | null
+          content?: string | null
           specifications?: Json
           image_url?: string | null
           sort_order?: number
@@ -83,6 +85,7 @@ export interface Database {
           title?: string
           description?: string | null
           long_description?: string | null
+          content?: string | null
           specifications?: Json
           image_url?: string | null
           sort_order?: number
@@ -154,6 +157,41 @@ export interface Database {
           }
         ]
       }
+      service_categories: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          icon: string
+          description: string | null
+          image_url: string | null
+          sort_order: number
+          is_visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          icon?: string
+          description?: string | null
+          image_url?: string | null
+          sort_order?: number
+          is_visible?: boolean
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          icon?: string
+          description?: string | null
+          image_url?: string | null
+          sort_order?: number
+          is_visible?: boolean
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           id: string
@@ -165,6 +203,11 @@ export interface Database {
           is_visible: boolean
           created_at: string
           updated_at: string
+          category_id: string | null
+          slug: string | null
+          content: string | null
+          detail_image_url: string | null
+          image_url: string | null
         }
         Insert: {
           id?: string
@@ -174,6 +217,11 @@ export interface Database {
           details?: Json
           sort_order?: number
           is_visible?: boolean
+          category_id?: string | null
+          slug?: string | null
+          content?: string | null
+          detail_image_url?: string | null
+          image_url?: string | null
         }
         Update: {
           id?: string
@@ -183,8 +231,20 @@ export interface Database {
           details?: Json
           sort_order?: number
           is_visible?: boolean
+          category_id?: string | null
+          slug?: string | null
+          content?: string | null
+          detail_image_url?: string | null
+          image_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'services_category_id_fkey'
+            columns: ['category_id']
+            referencedRelation: 'service_categories'
+            referencedColumns: ['id']
+          }
+        ]
       }
       standards: {
         Row: {
@@ -315,6 +375,76 @@ export interface Database {
         Update: {
           key?: string
           value?: Json
+        }
+        Relationships: []
+      }
+      support_types: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          description: string | null
+          content: string | null
+          image_url: string | null
+          sort_order: number
+          is_visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          description?: string | null
+          content?: string | null
+          image_url?: string | null
+          sort_order?: number
+          is_visible?: boolean
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          description?: string | null
+          content?: string | null
+          image_url?: string | null
+          sort_order?: number
+          is_visible?: boolean
+        }
+        Relationships: []
+      }
+      news: {
+        Row: {
+          id: string
+          title: string
+          slug: string
+          summary: string | null
+          content: string | null
+          image_url: string | null
+          published_at: string
+          is_visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          slug: string
+          summary?: string | null
+          content?: string | null
+          image_url?: string | null
+          published_at?: string
+          is_visible?: boolean
+        }
+        Update: {
+          id?: string
+          title?: string
+          slug?: string
+          summary?: string | null
+          content?: string | null
+          image_url?: string | null
+          published_at?: string
+          is_visible?: boolean
         }
         Relationships: []
       }

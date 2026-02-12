@@ -13,9 +13,9 @@ import {
 const navLinks = [
   { label: 'Məhsullar', href: '/products' },
   { label: 'Xidmətlər', href: '/services' },
-  { label: 'Standartlar', href: '/standards' },
-  { label: 'Layihələr', href: '/projects' },
+  { label: 'Dəstək', href: '/support' },
   { label: 'Haqqımızda', href: '/about' },
+  { label: 'Xəbərlər', href: '/news' },
 ];
 
 export default async function Footer() {

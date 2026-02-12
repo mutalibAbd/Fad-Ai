@@ -1,13 +1,12 @@
 # =====================================================
 # FADAI - Multi-Stage Next.js Dockerfile
 # =====================================================
-# Architecture: Multi-stage build for optimal image size
 # Stages:
-#   1. base       - Base Node.js image with dependencies
-#   2. deps       - Install production dependencies only
-#   3. builder    - Build the Next.js application
-#   4. runner     - Production runtime (minimal)
-#   5. development- Development runtime (hot reload)
+#   1. base        - Alpine Node.js base
+#   2. deps        - Install npm dependencies
+#   3. builder     - Build Next.js standalone bundle
+#   4. runner      - Minimal production image (~130 MB)
+#   5. development - Dev server with hot reload
 # =====================================================
 
 # =====================================================
@@ -15,9 +14,7 @@
 # =====================================================
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
 RUN apk add --no-cache libc6-compat
-
 WORKDIR /app
 
 # =====================================================
@@ -25,13 +22,8 @@ WORKDIR /app
 # =====================================================
 FROM base AS deps
 
-# Copy package files
 COPY package.json package-lock.json* ./
-
-# Install dependencies
-RUN npm ci --only=production && \
-    cp -R node_modules /tmp/node_modules_prod && \
-    npm ci
+RUN npm ci
 
 # =====================================================
 # Stage 3: Builder
@@ -40,55 +32,56 @@ FROM base AS builder
 
 WORKDIR /app
 
-# Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
-
-# Copy application code
 COPY . .
 
-# Set environment variables for build
+# NEXT_PUBLIC_* vars must be present at build time —
+# Next.js inlines them into the client JS bundle.
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-# Build Next.js application
-# Output: Optimized production build
 RUN npm run build
 
 # =====================================================
 # Stage 4: Runner (Production)
 # =====================================================
-FROM base AS runner
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Security: Run as non-root user
+RUN apk add --no-cache libc6-compat
+
+# Install sharp globally for next/image optimisation
+RUN npm i -g sharp@0.33.2 && npm cache clean --force
+
+# Non-root user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Set environment
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_SHARP_PATH=/usr/local/lib/node_modules/sharp
 
-# Copy only necessary files
+# Copy standalone output + static assets
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Switch to non-root user
 USER nextjs
 
-# Expose port
 EXPOSE 3000
 
-# Set hostname
 ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/api/health',(r)=>{process.exit(r.statusCode===200?0:1)})"
 
-# Start application
 CMD ["node", "server.js"]
 
 # =====================================================
@@ -98,21 +91,14 @@ FROM base AS development
 
 WORKDIR /app
 
-# Copy package files
 COPY package.json package-lock.json* ./
-
-# Install all dependencies (including devDependencies)
 RUN npm ci
 
-# Copy application code
 COPY . .
 
-# Set environment
 ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Expose port
 EXPOSE 3000
 
-# Development server with hot reload
 CMD ["npm", "run", "dev"]

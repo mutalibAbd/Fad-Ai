@@ -12,14 +12,16 @@ export default async function AdminDashboardPage() {
     { count: productsCount },
     { count: projectsCount },
     { count: servicesCount },
-    { count: standardsCount },
+    { count: supportCount },
+    { count: newsCount },
     { count: contactsCount },
     { count: unreadCount },
   ] = await Promise.all([
     supabase.from('products').select('*', { count: 'exact', head: true }),
     supabase.from('projects').select('*', { count: 'exact', head: true }),
     supabase.from('services').select('*', { count: 'exact', head: true }),
-    supabase.from('standards').select('*', { count: 'exact', head: true }),
+    supabase.from('support_types').select('*', { count: 'exact', head: true }),
+    supabase.from('news').select('*', { count: 'exact', head: true }),
     supabase.from('contact_submissions').select('*', { count: 'exact', head: true }),
     supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('is_read', false),
   ]) as { count: number | null }[];
@@ -28,7 +30,8 @@ export default async function AdminDashboardPage() {
     { label: 'Məhsullar', value: productsCount ?? 0, icon: '📦', href: '/admin/dashboard/products' },
     { label: 'Layihələr', value: projectsCount ?? 0, icon: '🏗️', href: '/admin/dashboard/projects' },
     { label: 'Xidmətlər', value: servicesCount ?? 0, icon: '⚙️', href: '/admin/dashboard/services' },
-    { label: 'Standartlar', value: standardsCount ?? 0, icon: '📋', href: '/admin/dashboard/standards' },
+    { label: 'Dəstək', value: supportCount ?? 0, icon: '🤝', href: '/admin/dashboard/support' },
+    { label: 'Xəbərlər', value: newsCount ?? 0, icon: '📰', href: '/admin/dashboard/news' },
     { label: 'Müraciətlər', value: contactsCount ?? 0, icon: '📩', href: '/admin/dashboard/contacts' },
     { label: 'Oxunmamış', value: unreadCount ?? 0, icon: '📬', href: '/admin/dashboard/contacts' },
   ];
@@ -47,7 +50,7 @@ export default async function AdminDashboardPage() {
       </h1>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
         {stats.map((stat) => (
           <a
             key={stat.label}

@@ -18,9 +18,9 @@ interface GlassHeaderProps {
 const defaultNavLinks: NavLink[] = [
   { label: 'Məhsullar', href: '/products' },
   { label: 'Xidmətlər', href: '/services' },
-  { label: 'Standart Protokollar', href: '/standards' },
-  { label: 'Layihələr', href: '/projects' },
+  { label: 'Dəstək', href: '/support' },
   { label: 'Haqqımızda', href: '/about' },
+  { label: 'Xəbərlər', href: '/news' },
 ];
 
 export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks }: GlassHeaderProps) {

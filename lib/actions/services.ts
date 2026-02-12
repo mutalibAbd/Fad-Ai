@@ -6,9 +6,13 @@ import { revalidatePath } from 'next/cache'
 export async function createService(data: {
   icon?: string
   title: string
+  slug?: string
   description?: string
+  content?: string
   details?: string[]
   image_url?: string
+  detail_image_url?: string
+  category_id?: string
   sort_order?: number
   is_visible?: boolean
 }) {
@@ -31,9 +35,13 @@ export async function createService(data: {
 export async function updateService(id: string, data: {
   icon?: string
   title?: string
+  slug?: string
   description?: string
+  content?: string
   details?: string[]
   image_url?: string | null
+  detail_image_url?: string | null
+  category_id?: string | null
   sort_order?: number
   is_visible?: boolean
 }) {

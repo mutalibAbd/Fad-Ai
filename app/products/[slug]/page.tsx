@@ -106,6 +106,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </section>
         )}
 
+        {/* Rich Content (Blog) */}
+        {product.content && (
+          <section className="py-16">
+            <div className="max-w-4xl mx-auto px-6">
+              <div className="prose prose-lg prose-slate max-w-none text-text-secondary tracking-tight leading-relaxed whitespace-pre-line">
+                {product.content}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Features */}
         {product.features.length > 0 && (
           <section className="py-20 bg-background-light">

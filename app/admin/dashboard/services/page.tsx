@@ -14,6 +14,17 @@ export default async function AdminServicesPage() {
     .select('*')
     .order('sort_order', { ascending: true }) as { data: Database['public']['Tables']['services']['Row'][] | null };
 
+  const { data: categories } = await supabase
+    .from('service_categories')
+    .select('id, title')
+    .order('sort_order', { ascending: true }) as { data: { id: string; title: string }[] | null };
+
+  // Build a category map for display
+  const categoryMap: Record<string, string> = {};
+  (categories ?? []).forEach((cat) => {
+    categoryMap[cat.id] = cat.title;
+  });
+
   return (
     <div>
       <AdminPageHeader
@@ -21,7 +32,7 @@ export default async function AdminServicesPage() {
         createHref="/admin/dashboard/services/new"
         createLabel="Yeni xidmət"
       />
-      <ServiceListClient services={services ?? []} />
+      <ServiceListClient services={services ?? []} categoryMap={categoryMap} />
     </div>
   );
 }

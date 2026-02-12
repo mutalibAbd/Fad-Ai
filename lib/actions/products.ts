@@ -9,6 +9,7 @@ export async function createProduct(data: {
   title: string
   description?: string
   long_description?: string
+  content?: string
   specifications?: Record<string, string>
   image_url?: string
   sort_order?: number
@@ -33,6 +34,7 @@ export async function updateProduct(id: string, data: {
   title?: string
   description?: string
   long_description?: string
+  content?: string
   specifications?: Record<string, string>
   image_url?: string
   sort_order?: number

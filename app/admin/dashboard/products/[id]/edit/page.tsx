@@ -36,6 +36,7 @@ export default async function EditProductPage({
           title: product.title,
           description: product.description ?? '',
           long_description: product.long_description ?? '',
+          content: product.content ?? '',
           specifications: (product.specifications as Record<string, string>) ?? {},
           image_url: product.image_url ?? '',
           sort_order: product.sort_order ?? 0,

@@ -1,8 +1,8 @@
 import { GlassHeader } from '@/components/ui';
 import Footer from '@/components/ui/Footer';
 import Link from 'next/link';
-import { getVisibleServices } from '@/lib/queries/services';
-import ServiceSection from './ServiceSection';
+import { getServiceCategoriesWithServices } from '@/lib/queries/service-categories';
+import ServicesClient from './ServicesClient';
 
 export const metadata = {
   title: 'Xidmətlər | FADAI',
@@ -12,7 +12,25 @@ export const metadata = {
 export const revalidate = 300;
 
 export default async function ServicesPage() {
-  const services = await getVisibleServices();
+  const categoriesWithServices = await getServiceCategoriesWithServices();
+
+  const categories = categoriesWithServices.map((cat) => ({
+    id: cat.id,
+    title: cat.title,
+    slug: cat.slug,
+  }));
+
+  const services = categoriesWithServices.flatMap((cat) =>
+    cat.services.map((svc) => ({
+      id: svc.id,
+      title: svc.title,
+      slug: svc.slug,
+      description: svc.description,
+      icon: svc.icon,
+      image_url: svc.image_url,
+      category_id: svc.category_id,
+    }))
+  );
 
   return (
     <>
@@ -33,21 +51,8 @@ export default async function ServicesPage() {
           </div>
         </section>
 
-        {/* Service Sections */}
-        {services.map((service, index) => {
-          const details = Array.isArray(service.details) ? service.details as string[] : [];
-          return (
-            <ServiceSection
-              key={service.id}
-              title={service.title}
-              description={service.description ?? ''}
-              icon={service.icon ?? ''}
-              imageUrl={(service as any).image_url ?? ''}
-              details={details}
-              index={index}
-            />
-          );
-        })}
+        {/* Scroll Spy Services */}
+        <ServicesClient categories={categories} services={services} />
 
         {/* CTA Section */}
         <section className="py-16 bg-background-light">

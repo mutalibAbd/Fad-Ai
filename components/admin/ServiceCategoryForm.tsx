@@ -5,37 +5,28 @@ import { useRouter } from 'next/navigation';
 import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
 
-interface ServiceFormProps {
+interface ServiceCategoryFormProps {
   initialData?: {
     id: string;
-    icon: string;
     title: string;
     slug: string;
+    icon: string;
     description: string;
-    content: string;
-    details: string[];
     image_url: string;
-    category_id: string;
     sort_order: number;
     is_visible: boolean;
   };
-  categories?: { id: string; title: string }[];
 }
 
-export default function ServiceForm({ initialData, categories = [] }: ServiceFormProps) {
+export default function ServiceCategoryForm({ initialData }: ServiceCategoryFormProps) {
   const router = useRouter();
   const isEditing = !!initialData;
 
-  const [icon, setIcon] = useState(initialData?.icon ?? '');
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [slug, setSlug] = useState(initialData?.slug ?? '');
+  const [icon, setIcon] = useState(initialData?.icon ?? '');
   const [description, setDescription] = useState(initialData?.description ?? '');
-  const [content, setContent] = useState(initialData?.content ?? '');
   const [imageUrl, setImageUrl] = useState(initialData?.image_url ?? '');
-  const [categoryId, setCategoryId] = useState(initialData?.category_id ?? '');
-  const [detailsText, setDetailsText] = useState(
-    initialData?.details ? initialData.details.join('\n') : ''
-  );
   const [sortOrder, setSortOrder] = useState(initialData?.sort_order ?? 0);
   const [isVisible, setIsVisible] = useState(initialData?.is_visible ?? true);
 
@@ -47,20 +38,12 @@ export default function ServiceForm({ initialData, categories = [] }: ServiceFor
     setLoading(true);
     setError('');
 
-    const details = detailsText
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
-
     const body = {
-      icon,
       title,
-      slug: slug || undefined,
+      slug,
+      icon,
       description,
-      content: content || undefined,
-      details,
       image_url: imageUrl || undefined,
-      category_id: categoryId || undefined,
       sort_order: sortOrder,
       is_visible: isVisible,
     };
@@ -68,18 +51,18 @@ export default function ServiceForm({ initialData, categories = [] }: ServiceFor
     try {
       let result;
       if (isEditing) {
-        const { updateService } = await import('@/lib/actions/services');
-        result = await updateService(initialData.id, body);
+        const { updateServiceCategory } = await import('@/lib/actions/service-categories');
+        result = await updateServiceCategory(initialData.id, body);
       } else {
-        const { createService } = await import('@/lib/actions/services');
-        result = await createService(body);
+        const { createServiceCategory } = await import('@/lib/actions/service-categories');
+        result = await createServiceCategory(body);
       }
 
       if (result.error) {
         setError(result.error);
         setLoading(false);
       } else {
-        router.push('/admin/dashboard/services');
+        router.push('/admin/dashboard/service-categories');
         router.refresh();
       }
     } catch {
@@ -88,86 +71,21 @@ export default function ServiceForm({ initialData, categories = [] }: ServiceFor
     }
   };
 
-  const categoryOptions = [
-    { value: '', label: '-- Kateqoriya seçin --' },
-    ...categories.map((cat) => ({ value: cat.id, label: cat.title })),
-  ];
-
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-5">
       <div className="grid grid-cols-2 gap-4">
-        <FormField
-          label="Başlıq"
-          name="title"
-          value={title}
-          onChange={setTitle}
-          required
-        />
-        <FormField
-          label="Slug"
-          name="slug"
-          value={slug}
-          onChange={setSlug}
-          placeholder="service-slug"
-        />
+        <FormField label="Başlıq" name="title" value={title} onChange={setTitle} required />
+        <FormField label="Slug" name="slug" value={slug} onChange={setSlug} required placeholder="coaching" />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <FormField
-          label="Icon (emoji)"
-          name="icon"
-          value={icon}
-          onChange={setIcon}
-          placeholder="🛠️ (ixtiyari)"
-        />
-        <FormField
-          label="Kateqoriya"
-          name="category_id"
-          type="select"
-          value={categoryId}
-          onChange={setCategoryId}
-          options={categoryOptions}
-        />
+        <FormField label="Icon (emoji)" name="icon" value={icon} onChange={setIcon} placeholder="🎯" />
+        <FormField label="Sıra" name="sort_order" type="number" value={sortOrder} onChange={(v) => setSortOrder(Number(v))} />
       </div>
 
-      <ImageUpload bucket="services" value={imageUrl} onChange={setImageUrl} label="Xidmət şəkli" />
+      <FormField label="Təsvir" name="description" type="textarea" value={description} onChange={setDescription} rows={3} />
 
-      <FormField
-        label="Sıra"
-        name="sort_order"
-        type="number"
-        value={sortOrder}
-        onChange={(v) => setSortOrder(Number(v))}
-      />
-
-      <FormField
-        label="Təsvir"
-        name="description"
-        type="textarea"
-        value={description}
-        onChange={setDescription}
-        rows={3}
-      />
-
-      <FormField
-        label="Məzmun"
-        name="content"
-        type="textarea"
-        value={content}
-        onChange={setContent}
-        rows={10}
-        placeholder="Xidmət haqqında ətraflı məzmun..."
-      />
-
-      <FormField
-        label="Detallar (hər sətir ayrı element olacaq)"
-        name="details"
-        type="textarea"
-        value={detailsText}
-        onChange={setDetailsText}
-        rows={6}
-        placeholder={"Birinci detal\nİkinci detal\nÜçüncü detal"}
-      />
+      <ImageUpload bucket="services" value={imageUrl} onChange={setImageUrl} label="Kateqoriya şəkli" />
 
       <div className="flex items-center gap-2">
         <input

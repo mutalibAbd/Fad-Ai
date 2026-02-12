@@ -3,25 +3,19 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { deleteService } from '@/lib/actions/services';
+import { deleteServiceCategory } from '@/lib/actions/service-categories';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
 
-interface Service {
+interface ServiceCategory {
   id: string;
-  icon: string;
   title: string;
-  category_id: string | null;
+  slug: string;
+  icon: string;
   sort_order: number;
   is_visible: boolean;
 }
 
-export default function ServiceListClient({
-  services,
-  categoryMap,
-}: {
-  services: Service[];
-  categoryMap: Record<string, string>;
-}) {
+export default function ServiceCategoryListClient({ categories }: { categories: ServiceCategory[] }) {
   const router = useRouter();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +23,7 @@ export default function ServiceListClient({
   const handleDelete = async () => {
     if (!deleteId) return;
     setLoading(true);
-    await deleteService(deleteId);
+    await deleteServiceCategory(deleteId);
     setDeleteId(null);
     setLoading(false);
     router.refresh();
@@ -42,54 +36,54 @@ export default function ServiceListClient({
           <thead>
             <tr className="border-b border-slate-100 text-left">
               <th className="px-6 py-3 text-xs font-medium text-text-secondary tracking-tight uppercase">Icon</th>
-              <th className="px-6 py-3 text-xs font-medium text-text-secondary tracking-tight uppercase">Xidmət</th>
               <th className="px-6 py-3 text-xs font-medium text-text-secondary tracking-tight uppercase">Kateqoriya</th>
+              <th className="px-6 py-3 text-xs font-medium text-text-secondary tracking-tight uppercase">Slug</th>
               <th className="px-6 py-3 text-xs font-medium text-text-secondary tracking-tight uppercase">Sıra</th>
               <th className="px-6 py-3 text-xs font-medium text-text-secondary tracking-tight uppercase">Status</th>
               <th className="px-6 py-3 text-xs font-medium text-text-secondary tracking-tight uppercase text-right">Əməliyyat</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {services.length === 0 ? (
+            {categories.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-8 text-center text-text-secondary tracking-tight">
-                  Xidmət yoxdur
+                  Kateqoriya yoxdur
                 </td>
               </tr>
             ) : (
-              services.map((service) => (
-                <tr key={service.id} className="hover:bg-slate-50/50">
-                  <td className="px-6 py-4 text-xl">{service.icon}</td>
+              categories.map((category) => (
+                <tr key={category.id} className="hover:bg-slate-50/50">
+                  <td className="px-6 py-4 text-xl">{category.icon}</td>
                   <td className="px-6 py-4 text-sm font-medium text-text-primary tracking-tight">
-                    {service.title}
+                    {category.title}
                   </td>
                   <td className="px-6 py-4 text-sm text-text-secondary tracking-tight">
-                    {service.category_id ? categoryMap[service.category_id] ?? '—' : '—'}
+                    {category.slug}
                   </td>
                   <td className="px-6 py-4 text-sm text-text-secondary tracking-tight">
-                    {service.sort_order}
+                    {category.sort_order}
                   </td>
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium tracking-tight ${
-                        service.is_visible
+                        category.is_visible
                           ? 'bg-green-50 text-green-700'
                           : 'bg-slate-100 text-slate-500'
                       }`}
                     >
-                      {service.is_visible ? 'Aktiv' : 'Gizli'}
+                      {category.is_visible ? 'Aktiv' : 'Gizli'}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <Link
-                        href={`/admin/dashboard/services/${service.id}/edit`}
+                        href={`/admin/dashboard/service-categories/${category.id}/edit`}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium tracking-tight text-primary hover:bg-primary/5 transition-colors"
                       >
                         Redakte
                       </Link>
                       <button
-                        onClick={() => setDeleteId(service.id)}
+                        onClick={() => setDeleteId(category.id)}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium tracking-tight text-red-600 hover:bg-red-50 transition-colors"
                       >
                         Sil
@@ -108,8 +102,8 @@ export default function ServiceListClient({
         onClose={() => setDeleteId(null)}
         onConfirm={handleDelete}
         loading={loading}
-        title="Xidməti silmək istəyirsiniz?"
-        message="Bu xidmət və ona aid bütün məlumatlar silinəcək."
+        title="Kateqoriyanı silmək istəyirsiniz?"
+        message="Bu kateqoriya və ona aid bütün məlumatlar silinəcək."
       />
     </>
   );

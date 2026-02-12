@@ -6,7 +6,10 @@ export type Product = Database['public']['Tables']['products']['Row']
 export type ProductFeature = Database['public']['Tables']['product_features']['Row']
 export type ProductImage = Database['public']['Tables']['product_images']['Row']
 export type Service = Database['public']['Tables']['services']['Row']
+export type ServiceCategory = Database['public']['Tables']['service_categories']['Row']
 export type Standard = Database['public']['Tables']['standards']['Row']
+export type SupportType = Database['public']['Tables']['support_types']['Row']
+export type News = Database['public']['Tables']['news']['Row']
 export type TeamMember = Database['public']['Tables']['team_members']['Row']
 export type ContactSubmission = Database['public']['Tables']['contact_submissions']['Row']
 export type SiteSetting = Database['public']['Tables']['site_settings']['Row']
@@ -15,6 +18,10 @@ export type SiteSetting = Database['public']['Tables']['site_settings']['Row']
 export interface ProductWithDetails extends Product {
   features: ProductFeature[]
   images: ProductImage[]
+}
+
+export interface ServiceCategoryWithServices extends ServiceCategory {
+  services: Service[]
 }
 
 export interface HeroContent {

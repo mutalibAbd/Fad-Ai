@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import ServiceForm from '@/components/admin/ServiceForm';
 
 export const metadata = {
@@ -23,6 +24,11 @@ export default async function EditServicePage({
 
   if (!service) notFound();
 
+  const { data: categories } = await supabase
+    .from('service_categories')
+    .select('id, title')
+    .order('sort_order', { ascending: true }) as { data: { id: string; title: string }[] | null };
+
   // Parse details JSONB - could be a JSON string or already an array
   let details: string[] = [];
   if (service.details) {
@@ -39,20 +45,22 @@ export default async function EditServicePage({
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
-        Xidməti Redaktə Et
-      </h1>
+      <AdminPageHeader title="Xidməti Redaktə Et" />
       <ServiceForm
         initialData={{
           id: service.id,
           icon: service.icon ?? '',
           title: service.title ?? '',
+          slug: service.slug ?? '',
           description: service.description ?? '',
+          content: service.content ?? '',
           details,
-          image_url: (service as any).image_url ?? '',
+          image_url: service.image_url ?? '',
+          category_id: service.category_id ?? '',
           sort_order: service.sort_order ?? 0,
           is_visible: service.is_visible ?? true,
         }}
+        categories={categories ?? []}
       />
     </div>
   );
