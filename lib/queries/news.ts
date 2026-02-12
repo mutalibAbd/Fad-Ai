@@ -1,8 +1,8 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import type { News } from '@/lib/types'
 
 export async function getVisibleNews(): Promise<News[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('news') as any)
@@ -19,7 +19,7 @@ export async function getVisibleNews(): Promise<News[]> {
 }
 
 export async function getNewsBySlug(slug: string): Promise<News | null> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('news') as any)

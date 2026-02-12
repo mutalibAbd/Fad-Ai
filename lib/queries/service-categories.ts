@@ -1,8 +1,8 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import type { ServiceCategory, ServiceCategoryWithServices } from '@/lib/types'
 
 export async function getVisibleServiceCategories(): Promise<ServiceCategory[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('service_categories') as any)
@@ -19,7 +19,7 @@ export async function getVisibleServiceCategories(): Promise<ServiceCategory[]> 
 }
 
 export async function getServiceCategoriesWithServices(): Promise<ServiceCategoryWithServices[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data: categories, error: catError } = await (supabase
     .from('service_categories') as any)
@@ -50,7 +50,7 @@ export async function getServiceCategoriesWithServices(): Promise<ServiceCategor
 }
 
 export async function getCategoryBySlug(slug: string): Promise<ServiceCategory | null> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('service_categories') as any)

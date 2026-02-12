@@ -1,8 +1,8 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import type { SupportType } from '@/lib/types'
 
 export async function getVisibleSupportTypes(): Promise<SupportType[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('support_types') as any)
@@ -19,7 +19,7 @@ export async function getVisibleSupportTypes(): Promise<SupportType[]> {
 }
 
 export async function getSupportBySlug(slug: string): Promise<SupportType | null> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('support_types') as any)

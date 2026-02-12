@@ -1,10 +1,10 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import type { Service } from '@/lib/types'
 
 export type { Service }
 
 export async function getVisibleServices(): Promise<Service[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('services') as any)
@@ -21,7 +21,7 @@ export async function getVisibleServices(): Promise<Service[]> {
 }
 
 export async function getServicesByCategory(categoryId: string): Promise<Service[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('services') as any)
@@ -39,7 +39,7 @@ export async function getServicesByCategory(categoryId: string): Promise<Service
 }
 
 export async function getServiceBySlug(slug: string): Promise<Service | null> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('services') as any)
