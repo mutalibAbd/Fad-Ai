@@ -179,7 +179,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <FormField label="Icon (emoji)" name="icon" value={icon} onChange={setIcon} required placeholder="🔬" />
+          <FormField label="Icon (emoji)" name="icon" value={icon} onChange={setIcon}  placeholder="🔬" />
           <FormField label="Sıra" name="sort_order" type="number" value={sortOrder} onChange={(v) => setSortOrder(Number(v))} />
         </div>
 
