@@ -121,8 +121,13 @@ export default function ProductForm({ initialData }: ProductFormProps) {
 
       if (result.error) {
         setError(result.error);
-      } else {
-        router.refresh();
+      } else if (result.feature) {
+        setFeatures((prev) => [...prev, {
+          id: result.feature.id,
+          title: result.feature.title,
+          description: result.feature.description ?? '',
+          sort_order: result.feature.sort_order ?? 0,
+        }]);
       }
     } catch {
       setError('Xüsusiyyət əlavə edilə bilmədi');

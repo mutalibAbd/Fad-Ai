@@ -90,7 +90,7 @@ export async function createProductFeature(data: {
 }) {
   const supabase = createAdminClient()
 
-  const { error } = await (supabase.from('product_features') as any).insert(data)
+  const { data: feature, error } = await (supabase.from('product_features') as any).insert(data).select().single()
 
   if (error) {
     return { error: error.message }
@@ -98,7 +98,7 @@ export async function createProductFeature(data: {
 
   revalidatePath('/products')
   revalidatePath('/admin/dashboard/products')
-  return { success: true }
+  return { success: true, feature }
 }
 
 export async function updateProductFeature(id: string, data: {
