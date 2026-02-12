@@ -7,6 +7,8 @@ export const metadata = {
   title: 'Dəstək | Admin | FADAI',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminSupportPage() {
   const supabase = createAdminClient();
   const { data: supportTypes } = await supabase

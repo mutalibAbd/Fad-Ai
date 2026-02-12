@@ -8,6 +8,8 @@ export const metadata = {
   title: 'Məhsullar | Admin | FADAI',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminProductsPage() {
   const supabase = createAdminClient();
   const { data: products } = await supabase
