@@ -1,10 +1,10 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import type { Product, ProductWithDetails } from '@/lib/types'
 
 export type { Product }
 
 export async function getVisibleProducts(): Promise<Product[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data, error } = await (supabase
     .from('products') as any)
@@ -21,7 +21,7 @@ export async function getVisibleProducts(): Promise<Product[]> {
 }
 
 export async function getProductBySlug(slug: string): Promise<ProductWithDetails | null> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data: product, error } = await (supabase
     .from('products') as any)
