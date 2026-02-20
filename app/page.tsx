@@ -1,7 +1,23 @@
-import { GlassHeader, HeroSection, SoftCard } from '@/components/ui';
+import {
+  GlassHeader,
+  HeroSection,
+  SoftCard,
+  SocialProofSection,
+  AboutPreviewSection,
+  FeaturesGridSection,
+  CTASection,
+} from '@/components/ui';
 import Footer from '@/components/ui/Footer';
 import { SearchPlusIcon, ShieldIcon, TeamIcon } from '@/components/icons';
-import { getHeroContent, getHomepageServices } from '@/lib/queries/site-settings';
+import {
+  getHeroContent,
+  getHomepageServices,
+  getSocialProofContent,
+  getAboutPreviewContent,
+  getFeaturesGridContent,
+  getStatsContent,
+  getCTAContent,
+} from '@/lib/queries/site-settings';
 
 export const metadata = {
   title: 'FADAI | Tibbi Görüntüləmədə Süni İntellekt',
@@ -11,9 +27,14 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [hero, services] = await Promise.all([
+  const [hero, services, socialProof, aboutPreview, featuresGrid, stats, cta] = await Promise.all([
     getHeroContent(),
     getHomepageServices(),
+    getSocialProofContent(),
+    getAboutPreviewContent(),
+    getFeaturesGridContent(),
+    getStatsContent(),
+    getCTAContent(),
   ]);
 
   return (
@@ -24,6 +45,9 @@ export default async function HomePage() {
         headline={hero.headline}
         subheadline={hero.subheadline}
       />
+
+      {/* Social Proof: Trust Logos + Stats */}
+      <SocialProofSection content={socialProof} stats={stats.stats} />
 
       {/* Services Preview Section */}
       <section className="py-20 bg-background-light">
@@ -95,6 +119,15 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* About Preview Section */}
+      <AboutPreviewSection content={aboutPreview} />
+
+      {/* Key Features / Offers Grid */}
+      <FeaturesGridSection content={featuresGrid} />
+
+      {/* CTA / Lead Magnet Section */}
+      <CTASection content={cta} />
 
       <Footer />
     </>

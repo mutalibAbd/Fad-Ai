@@ -3,11 +3,45 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-background text-text-primary font-sans antialiased;
+  :root {
+    /* Light Mode Colors */
+    --background: #FBFBFB;
+    --background-light: #F5F5F7;
+    --text-primary: #1D1D1F;
+    --text-secondary: #475569;
+    --primary: #2B59FF;
+    --card-bg: #FFFFFF;
+    --card-border: #F1F5F9;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-semibold;
+
+  /* Use html.dark for higher specificity to ensure variables override :root */
+  html.dark {
+    --background: #020617;
+    /* Slate 950 */
+    --background-light: #0F172A;
+    /* Slate 900 */
+    --text-primary: #F8FAFC;
+    /* Slate 50 */
+    --text-secondary: #94A3B8;
+    /* Slate 400 */
+    --primary: #3B82F6;
+    /* Blue 500 */
+    --card-bg: #0F172A;
+    /* Slate 900 */
+    --card-border: #1E293B;
+    /* Slate 800 */
+  }
+
+  body {
+    @apply bg-[var(--background)] text-[var(--text-primary)] font-sans antialiased transition-colors duration-300;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading tracking-tight font-semibold;
   }
 }

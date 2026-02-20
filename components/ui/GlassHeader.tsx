@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@headlessui/react';
 import { CloseIcon } from '@/components/icons';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 interface NavLink {
   label: string;
@@ -27,7 +28,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-100">
+    <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="text-2xl font-semibold tracking-tight text-primary">
@@ -47,25 +48,31 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
           ))}
         </div>
 
-        {/* Desktop CTA Button */}
-        <Link
-          href="/contact"
-          className="hidden md:inline-block bg-primary text-white px-6 py-2 rounded-lg font-medium tracking-tight hover:bg-primary-600 transition-colors duration-200"
-        >
-          Əlaqə
-        </Link>
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-4">
+          <ThemeToggle />
+          <Link
+            href="/contact"
+            className="bg-primary text-white px-6 py-2 rounded-lg font-medium tracking-tight hover:bg-primary-600 transition-colors duration-200"
+          >
+            Əlaqə
+          </Link>
+        </div>
 
-        {/* Mobile Hamburger Button */}
-        <button
-          type="button"
-          className="md:hidden flex flex-col items-center justify-center w-10 h-10 gap-1.5"
-          onClick={() => setMobileMenuOpen(true)}
-          aria-label="Menyunu aç"
-        >
-          <span className="block w-6 h-0.5 bg-text-primary transition-all" />
-          <span className="block w-6 h-0.5 bg-text-primary transition-all" />
-          <span className="block w-6 h-0.5 bg-text-primary transition-all" />
-        </button>
+        {/* Mobile Actions */}
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="flex flex-col items-center justify-center w-10 h-10 gap-1.5"
+            onClick={() => setMobileMenuOpen(true)}
+            aria-label="Menyunu aç"
+          >
+            <span className="block w-6 h-0.5 bg-text-primary transition-all" />
+            <span className="block w-6 h-0.5 bg-text-primary transition-all" />
+            <span className="block w-6 h-0.5 bg-text-primary transition-all" />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Menu */}
@@ -76,7 +83,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
         onClose={setMobileMenuOpen}
       >
         <div className="fixed inset-0 z-50" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-slate-100">
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-slate-950 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-slate-100 dark:sm:ring-slate-800">
           <div className="flex items-center justify-between">
             <Link
               href="/"

@@ -70,3 +70,52 @@ export interface ContactFormData {
   subject?: string
   message: string
 }
+
+// Homepage Section Types
+
+export interface TrustLogo {
+  name: string
+  image_url: string
+}
+
+export interface SocialProofContent {
+  title: string
+  logos: TrustLogo[]
+}
+
+export interface AboutPreviewContent {
+  title: string
+  description: string
+  image_url: string
+  cta_text: string
+  cta_url: string
+}
+
+export interface FeatureItem {
+  icon: string
+  title: string
+  description: string
+}
+
+export interface FeaturesGridContent {
+  title: string
+  subtitle: string
+  features: FeatureItem[]
+}
+
+export interface StatItem {
+  value: string
+  label: string
+}
+
+export interface StatsContent {
+  stats: StatItem[]
+}
+
+export interface CTAContent {
+  title: string
+  subtitle: string
+  cta_text: string
+  cta_url: string
+  image_url: string
+}

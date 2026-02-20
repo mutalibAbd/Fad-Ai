@@ -5,12 +5,13 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         // Primary FADAI Blue
         primary: {
-          DEFAULT: '#2B59FF',
+          DEFAULT: 'var(--primary)',
           50: '#F0F4FF',
           100: '#E0E9FF',
           200: '#C1D3FF',
@@ -24,17 +25,23 @@ const config: Config = {
         },
         // Background Off-white
         background: {
-          DEFAULT: '#FBFBFB',
-          light: '#F5F5F7',
+          DEFAULT: 'var(--background)',
+          light: 'var(--background-light)',
         },
         // Text colors
         text: {
-          primary: '#1D1D1F',
-          secondary: '#86868B',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
         },
+        // Card colors
+        card: {
+          DEFAULT: 'var(--card-bg)',
+          border: 'var(--card-border)',
+        }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['var(--font-plus-jakarta)', 'sans-serif'],
       },
       letterSpacing: {
         tight: '-0.01em',

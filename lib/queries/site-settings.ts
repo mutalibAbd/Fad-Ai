@@ -7,6 +7,11 @@ import type {
   ContactInfo,
   SocialLinks,
   HomepageService,
+  SocialProofContent,
+  AboutPreviewContent,
+  FeaturesGridContent,
+  StatsContent,
+  CTAContent,
 } from '@/lib/types'
 
 export async function getSiteSetting(key: string): Promise<Json | null> {
@@ -107,4 +112,101 @@ export async function getHomepageServices(): Promise<HomepageService[]> {
   }
 
   return value as unknown as HomepageService[]
+}
+
+export async function getSocialProofContent(): Promise<SocialProofContent> {
+  const value = await getSiteSetting('social_proof')
+  const defaults: SocialProofContent = {
+    title: 'Etibarlı tərəfdaşlar',
+    logos: [],
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, unknown>) } as SocialProofContent
+}
+
+export async function getAboutPreviewContent(): Promise<AboutPreviewContent> {
+  const value = await getSiteSetting('about_preview')
+  const defaults: AboutPreviewContent = {
+    title: 'Biz kimik?',
+    description: 'FADAI tibbi görüntüləmə sahəsində süni intellekt texnologiyalarını tətbiq edən innovativ şirkətdir. Missiyamız — dəqiq diaqnostika ilə həyatları dəyişmək.',
+    image_url: '',
+    cta_text: 'Ətraflı',
+    cta_url: '/about',
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, unknown>) } as AboutPreviewContent
+}
+
+export async function getFeaturesGridContent(): Promise<FeaturesGridContent> {
+  const value = await getSiteSetting('features_grid')
+  const defaults: FeaturesGridContent = {
+    title: 'Əsas Üstünlüklərimiz',
+    subtitle: 'Müasir tibbi görüntüləmə texnologiyaları ilə gələcəyə addım',
+    features: [
+      {
+        title: 'Süni İntellekt Analizi',
+        description: 'Rentgen və MRT görüntülərinin dərin analizi üçün qabaqcıl AI alqoritmləri.',
+        icon: '🧠'
+      },
+      {
+        title: '24/7 Diaqnostika',
+        description: 'Zaman itkisi olmadan, günün istənilən saatında dəqiq nəticələr əldə edin.',
+        icon: '⚡'
+      },
+      {
+        title: 'Təhlükəsiz Arxiv',
+        description: 'Bütün tibbi məlumatlarınız ən yüksək təhlükəsizlik standartları ilə qorunur.',
+        icon: '🔒'
+      },
+      {
+        title: 'Komanda İnteqrasiyası',
+        description: 'Həkimlər və mütəxəssislər arasında vahid platforma üzərindən əməkdaşlıq.',
+        icon: '🤝'
+      }
+    ],
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, unknown>) } as FeaturesGridContent
+}
+
+export async function getStatsContent(): Promise<StatsContent> {
+  const value = await getSiteSetting('homepage_stats')
+  const defaults: StatsContent = {
+    stats: [],
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, unknown>) } as StatsContent
+}
+
+export async function getCTAContent(): Promise<CTAContent> {
+  const value = await getSiteSetting('homepage_cta')
+  const defaults: CTAContent = {
+    title: 'Layihənizi bizimlə başlayın',
+    subtitle: 'Pulsuz konsultasiya alın və tibbi görüntüləmə həllərimizi kəşf edin.',
+    cta_text: 'Pulsuz Konsultasiya',
+    cta_url: '/contact',
+    image_url: '',
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, unknown>) } as CTAContent
 }
