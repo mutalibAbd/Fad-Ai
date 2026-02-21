@@ -62,7 +62,7 @@ export default function ContactForm() {
           value={formData.full_name}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          className="w-full px-4 py-3 rounded-xl border border-card-border bg-card text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
           placeholder="Adınız və soyadınız"
         />
       </div>
@@ -79,7 +79,7 @@ export default function ContactForm() {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          className="w-full px-4 py-3 rounded-xl border border-card-border bg-card text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
           placeholder="email@example.com"
         />
       </div>
@@ -95,7 +95,7 @@ export default function ContactForm() {
           name="phone"
           value={formData.phone}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          className="w-full px-4 py-3 rounded-xl border border-card-border bg-card text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
           placeholder="+994 XX XXX XX XX"
         />
       </div>
@@ -111,7 +111,7 @@ export default function ContactForm() {
           name="subject"
           value={formData.subject}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+          className="w-full px-4 py-3 rounded-xl border border-card-border bg-card text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
           placeholder="Müraciətin mövzusu"
         />
       </div>
@@ -128,7 +128,7 @@ export default function ContactForm() {
           onChange={handleChange}
           required
           rows={5}
-          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
+          className="w-full px-4 py-3 rounded-xl border border-card-border bg-card text-text-primary tracking-tight focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
           placeholder="Mesajınızı yazın..."
         />
       </div>

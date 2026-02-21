@@ -1,22 +1,15 @@
-import { createAdminClient } from '@/lib/supabase/server';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
-import ServiceForm from '@/components/admin/ServiceForm';
+import ServiceCategoryForm from '@/components/admin/ServiceCategoryForm';
 
 export const metadata = {
-  title: 'Yeni Xidmət | Admin | FADAI',
+  title: 'Yeni Kateqoriya | Admin | FADAI',
 };
 
-export default async function NewServicePage() {
-  const supabase = createAdminClient();
-  const { data: categories } = await supabase
-    .from('service_categories')
-    .select('id, title')
-    .order('sort_order', { ascending: true }) as { data: { id: string; title: string }[] | null };
-
+export default function NewServiceCategoryPage() {
   return (
     <div>
-      <AdminPageHeader title="Yeni Xidmət" />
-      <ServiceForm categories={categories ?? []} />
+      <AdminPageHeader title="Yeni Kateqoriya" />
+      <ServiceCategoryForm redirectToEdit />
     </div>
   );
 }

@@ -1,12 +1,8 @@
-import { createAdminClient } from '@/lib/supabase/server';
 import {
   getHeroContent,
-  getHomepageServices,
-  getSocialProofContent,
   getAboutPreviewContent,
-  getFeaturesGridContent,
-  getStatsContent,
-  getCTAContent,
+  getSectionTitles,
+  getFooterContent,
 } from '@/lib/queries/site-settings';
 import HomepageEditorClient from './HomepageEditorClient';
 
@@ -14,15 +10,14 @@ export const metadata = {
   title: 'Ana Səhifə | Admin | FADAI',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminHomepagePage() {
-  const [hero, services, socialProof, aboutPreview, featuresGrid, stats, cta] = await Promise.all([
+  const [hero, aboutPreview, sectionTitles, footerContent] = await Promise.all([
     getHeroContent(),
-    getHomepageServices(),
-    getSocialProofContent(),
     getAboutPreviewContent(),
-    getFeaturesGridContent(),
-    getStatsContent(),
-    getCTAContent(),
+    getSectionTitles(),
+    getFooterContent(),
   ]);
 
   return (
@@ -32,12 +27,9 @@ export default async function AdminHomepagePage() {
       </h1>
       <HomepageEditorClient
         hero={hero}
-        services={services}
-        socialProof={socialProof}
         aboutPreview={aboutPreview}
-        featuresGrid={featuresGrid}
-        stats={stats}
-        cta={cta}
+        sectionTitles={sectionTitles}
+        footerContent={footerContent}
       />
     </div>
   );

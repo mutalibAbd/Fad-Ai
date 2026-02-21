@@ -31,6 +31,7 @@ export interface HeroContent {
   cta_primary_url: string
   cta_secondary_text: string
   cta_secondary_url: string
+  background_images: string[]
 }
 
 export interface AboutContent {
@@ -118,4 +119,21 @@ export interface CTAContent {
   cta_text: string
   cta_url: string
   image_url: string
+}
+
+export interface SectionTitles {
+  services: string
+  products: string
+  news: string
+  support: string
+}
+
+export interface FooterContent {
+  tagline: string
+  copyright: string
+}
+
+export interface FAQItem {
+  question: string
+  answer: string
 }

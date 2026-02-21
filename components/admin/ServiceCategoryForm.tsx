@@ -16,9 +16,10 @@ interface ServiceCategoryFormProps {
     sort_order: number;
     is_visible: boolean;
   };
+  redirectToEdit?: boolean;
 }
 
-export default function ServiceCategoryForm({ initialData }: ServiceCategoryFormProps) {
+export default function ServiceCategoryForm({ initialData, redirectToEdit }: ServiceCategoryFormProps) {
   const router = useRouter();
   const isEditing = !!initialData;
 
@@ -62,7 +63,11 @@ export default function ServiceCategoryForm({ initialData }: ServiceCategoryForm
         setError(result.error);
         setLoading(false);
       } else {
-        router.push('/admin/dashboard/service-categories');
+        if (!isEditing && redirectToEdit && 'id' in result && result.id) {
+          router.push(`/admin/dashboard/services/${result.id}/edit`);
+        } else {
+          router.push('/admin/dashboard/services');
+        }
         router.refresh();
       }
     } catch {

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
+import ContentSectionsEditor, { parseSections, type ContentSection } from '@/components/admin/ContentSectionsEditor';
 
 interface Feature {
   id: string;
@@ -38,7 +39,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [description, setDescription] = useState(initialData?.description ?? '');
   const [longDescription, setLongDescription] = useState(initialData?.long_description ?? '');
-  const [content, setContent] = useState(initialData?.content ?? '');
+  const [sections, setSections] = useState<ContentSection[]>(parseSections(initialData?.content));
   const [imageUrl, setImageUrl] = useState(initialData?.image_url ?? '');
   const [sortOrder, setSortOrder] = useState(initialData?.sort_order ?? 0);
   const [isVisible, setIsVisible] = useState(initialData?.is_visible ?? true);
@@ -76,7 +77,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
       title,
       description,
       long_description: longDescription,
-      content,
+      content: sections.length > 0 ? JSON.stringify(sections) : '',
       specifications,
       image_url: imageUrl,
       sort_order: sortOrder,
@@ -187,15 +188,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
 
         <FormField label="Ətraflı təsvir" name="long_description" type="textarea" value={longDescription} onChange={setLongDescription} rows={6} />
 
-        <FormField
-          label="Məzmun (Blog / Markdown)"
-          name="content"
-          type="textarea"
-          value={content}
-          onChange={setContent}
-          rows={10}
-          placeholder="Məhsul haqqında ətraflı blog məzmunu..."
-        />
+        <ContentSectionsEditor value={sections} onChange={setSections} />
 
         <FormField
           label="Spesifikasiyalar (hər sətir: açar: dəyər)"

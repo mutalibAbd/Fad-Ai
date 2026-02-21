@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProductBySlug, getAllProductSlugs } from '@/lib/queries/products';
+import Markdown from 'react-markdown';
+import { parseSections } from '@/lib/utils/content-sections';
 
 export const revalidate = 60;
 
@@ -43,6 +45,18 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const specs = product.specifications && typeof product.specifications === 'object' && !Array.isArray(product.specifications)
     ? product.specifications as Record<string, string>
     : null;
+
+  const sections = parseSections(product.content);
+  const hasSections = sections.length > 0;
+
+  function sectionId(heading: string, idx: number) {
+    const slug = heading
+      .toLowerCase()
+      .replace(/[^a-z0-9əüöğışçı\s]+/gi, '')
+      .replace(/\s+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    return slug || `section-${idx}`;
+  }
 
   return (
     <>
@@ -98,13 +112,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
         </section>
 
-        {/* Long Description */}
+        {/* Long Description — intro paragraph */}
         {product.long_description && (
           <section className="py-16">
             <div className="max-w-4xl mx-auto px-6">
-              <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
-                Ətraflı Məlumat
-              </h2>
               <p className="text-lg text-text-secondary tracking-tight leading-relaxed">
                 {product.long_description}
               </p>
@@ -112,12 +123,42 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </section>
         )}
 
-        {/* Rich Content (Blog) */}
-        {product.content && (
+        {/* Two-Column Content: Sticky ToC + Markdown Sections */}
+        {hasSections && (
           <section className="py-16">
-            <div className="max-w-4xl mx-auto px-6">
-              <div className="prose prose-lg prose-slate max-w-none text-text-secondary tracking-tight leading-relaxed whitespace-pre-line">
-                {product.content}
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+                {/* Sticky Table of Contents */}
+                <nav className="lg:w-56 flex-shrink-0">
+                  <div className="lg:sticky lg:top-24 space-y-1">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary mb-3">
+                      Mündəricat
+                    </h3>
+                    {sections.map((s, i) => (
+                      <a
+                        key={i}
+                        href={`#${sectionId(s.heading, i)}`}
+                        className="block text-sm text-text-secondary hover:text-primary tracking-tight py-1.5 border-l-2 border-transparent hover:border-primary pl-3 transition-colors duration-200"
+                      >
+                        {s.heading}
+                      </a>
+                    ))}
+                  </div>
+                </nav>
+
+                {/* Content Sections */}
+                <div className="flex-1 min-w-0 space-y-14">
+                  {sections.map((s, i) => (
+                    <div key={i} id={sectionId(s.heading, i)}>
+                      <h2 className="text-2xl font-semibold tracking-tight text-text-primary mb-6">
+                        {s.heading}
+                      </h2>
+                      <div className="prose prose-slate max-w-none dark:prose-invert prose-headings:tracking-tight prose-p:tracking-tight prose-p:leading-relaxed prose-p:text-text-secondary prose-headings:text-text-primary prose-strong:text-text-primary prose-li:text-text-secondary">
+                        <Markdown>{s.body}</Markdown>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
@@ -215,12 +256,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               >
                 Əlaqə Saxlayın
               </Link>
-              <Link
-                href="/products"
-                className="bg-slate-50 text-text-primary px-8 py-4 rounded-xl font-medium tracking-tight border border-slate-200 hover:bg-slate-100 transition-colors duration-200"
-              >
-                Bütün Məhsullar
-              </Link>
+              
             </div>
           </div>
         </section>

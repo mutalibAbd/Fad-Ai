@@ -17,8 +17,10 @@ export async function updateSiteSetting(key: string, value: Json) {
   revalidatePath('/')
   revalidatePath('/about')
   revalidatePath('/contact')
+  revalidatePath('/faq')
   revalidatePath('/admin/dashboard/settings')
   revalidatePath('/admin/dashboard/homepage')
   revalidatePath('/admin/dashboard/about')
+  revalidatePath('/admin/dashboard/faq')
   return { success: true }
 }

@@ -17,11 +17,8 @@ interface GlassHeaderProps {
 }
 
 const defaultNavLinks: NavLink[] = [
-  { label: 'Məhsullar', href: '/products' },
-  { label: 'Xidmətlər', href: '/services' },
-  { label: 'Dəstək', href: '/support' },
   { label: 'Haqqımızda', href: '/about' },
-  { label: 'Xəbərlər', href: '/news' },
+  { label: 'Əlaqə', href: '/contact' },
 ];
 
 export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks }: GlassHeaderProps) {
@@ -29,13 +26,16 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
-      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center">
         {/* Logo */}
         <Link href="/" className="text-2xl font-semibold tracking-tight text-primary">
           {logo}
         </Link>
 
-        {/* Desktop Navigation Links */}
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Desktop Navigation Links + Theme Toggle (right-aligned) */}
         <div className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
@@ -46,17 +46,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
               {link.label}
             </Link>
           ))}
-        </div>
-
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-4">
           <ThemeToggle />
-          <Link
-            href="/contact"
-            className="bg-primary text-white px-6 py-2 rounded-lg font-medium tracking-tight hover:bg-primary-600 transition-colors duration-200"
-          >
-            Əlaqə
-          </Link>
         </div>
 
         {/* Mobile Actions */}
@@ -115,15 +105,6 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
                   {link.label}
                 </Link>
               ))}
-            </div>
-            <div className="mt-8">
-              <Link
-                href="/contact"
-                className="block w-full text-center bg-primary text-white px-6 py-3 rounded-xl font-medium tracking-tight hover:bg-primary-600 transition-all duration-300"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Əlaqə
-              </Link>
             </div>
           </div>
         </Dialog.Panel>

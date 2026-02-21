@@ -2,13 +2,25 @@ import { notFound } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
-import ServiceForm from '@/components/admin/ServiceForm';
+import ServiceCategoryEditorClient from './ServiceCategoryEditorClient';
 
 export const metadata = {
-  title: 'Xidməti Redaktə Et | Admin | FADAI',
+  title: 'Kateqoriya Redaktəsi | Admin | FADAI',
 };
 
-export default async function EditServicePage({
+type CategoryRow = Database['public']['Tables']['service_categories']['Row'];
+type ServiceRow = Database['public']['Tables']['services']['Row'];
+
+function parseDetails(details: unknown): string[] {
+  if (!details) return [];
+  if (typeof details === 'string') {
+    try { return JSON.parse(details); } catch { return []; }
+  }
+  if (Array.isArray(details)) return details as string[];
+  return [];
+}
+
+export default async function EditServiceCategoryPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -16,51 +28,50 @@ export default async function EditServicePage({
   const { id } = await params;
   const supabase = createAdminClient();
 
-  const { data: service } = await supabase
-    .from('services')
+  // Fetch category
+  const { data: category } = await supabase
+    .from('service_categories')
     .select('*')
     .eq('id', id)
-    .single() as { data: Database['public']['Tables']['services']['Row'] | null };
+    .single() as { data: CategoryRow | null };
 
-  if (!service) notFound();
+  if (!category) notFound();
 
-  const { data: categories } = await supabase
-    .from('service_categories')
-    .select('id, title')
-    .order('sort_order', { ascending: true }) as { data: { id: string; title: string }[] | null };
+  // Fetch services belonging to this category
+  const { data: services } = await supabase
+    .from('services')
+    .select('*')
+    .eq('category_id', id)
+    .order('sort_order', { ascending: true }) as { data: ServiceRow[] | null };
 
-  // Parse details JSONB - could be a JSON string or already an array
-  let details: string[] = [];
-  if (service.details) {
-    if (typeof service.details === 'string') {
-      try {
-        details = JSON.parse(service.details);
-      } catch {
-        details = [];
-      }
-    } else if (Array.isArray(service.details)) {
-      details = service.details as string[];
-    }
-  }
+  const serializedServices = (services ?? []).map((svc) => ({
+    id: svc.id,
+    icon: svc.icon ?? '',
+    title: svc.title ?? '',
+    slug: svc.slug ?? '',
+    description: svc.description ?? '',
+    content: svc.content ?? '',
+    details: parseDetails(svc.details),
+    image_url: svc.image_url ?? '',
+    sort_order: svc.sort_order ?? 0,
+    is_visible: svc.is_visible ?? true,
+  }));
 
   return (
     <div>
-      <AdminPageHeader title="Xidməti Redaktə Et" />
-      <ServiceForm
-        initialData={{
-          id: service.id,
-          icon: service.icon ?? '',
-          title: service.title ?? '',
-          slug: service.slug ?? '',
-          description: service.description ?? '',
-          content: service.content ?? '',
-          details,
-          image_url: service.image_url ?? '',
-          category_id: service.category_id ?? '',
-          sort_order: service.sort_order ?? 0,
-          is_visible: service.is_visible ?? true,
+      <AdminPageHeader title={`${category.title} — Redaktə`} />
+      <ServiceCategoryEditorClient
+        category={{
+          id: category.id,
+          title: category.title,
+          slug: category.slug,
+          icon: category.icon ?? '',
+          description: category.description ?? '',
+          image_url: category.image_url ?? '',
+          sort_order: category.sort_order ?? 0,
+          is_visible: category.is_visible ?? true,
         }}
-        categories={categories ?? []}
+        initialServices={serializedServices}
       />
     </div>
   );

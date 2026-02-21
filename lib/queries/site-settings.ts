@@ -12,6 +12,9 @@ import type {
   FeaturesGridContent,
   StatsContent,
   CTAContent,
+  SectionTitles,
+  FooterContent,
+  FAQItem,
 } from '@/lib/types'
 
 export async function getSiteSetting(key: string): Promise<Json | null> {
@@ -36,16 +39,36 @@ export async function getHeroContent(): Promise<HeroContent> {
     headline: 'Radiologiyada Rəqəmsal Simfoniya',
     subheadline: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi - innovativ süni intellekt texnologiyası',
     cta_primary_text: 'Başlamaq',
-    cta_primary_url: '/products',
+    cta_primary_url: '/contact',
     cta_secondary_text: 'Ətraflı Məlumat',
     cta_secondary_url: '/about',
+    background_images: [],
   }
 
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return defaults
   }
 
-  return { ...defaults, ...(value as Record<string, string>) }
+  const raw = value as Record<string, unknown>
+
+  // Migrate old background_image (string) to background_images (array)
+  let backgroundImages: string[] = []
+  if (Array.isArray(raw.background_images)) {
+    backgroundImages = raw.background_images as string[]
+  } else if (typeof raw.background_image === 'string' && (raw.background_image as string).trim() !== '') {
+    backgroundImages = [raw.background_image as string]
+  }
+
+  return {
+    ...defaults,
+    headline: (raw.headline as string) || defaults.headline,
+    subheadline: (raw.subheadline as string) || defaults.subheadline,
+    cta_primary_text: (raw.cta_primary_text as string) || defaults.cta_primary_text,
+    cta_primary_url: (raw.cta_primary_url as string) || defaults.cta_primary_url,
+    cta_secondary_text: (raw.cta_secondary_text as string) || defaults.cta_secondary_text,
+    cta_secondary_url: (raw.cta_secondary_url as string) || defaults.cta_secondary_url,
+    background_images: backgroundImages,
+  }
 }
 
 export async function getAboutContent(): Promise<AboutContent> {
@@ -209,4 +232,44 @@ export async function getCTAContent(): Promise<CTAContent> {
   }
 
   return { ...defaults, ...(value as Record<string, unknown>) } as CTAContent
+}
+
+export async function getSectionTitles(): Promise<SectionTitles> {
+  const value = await getSiteSetting('section_titles')
+  const defaults: SectionTitles = {
+    services: 'Xidmətlərimiz',
+    products: 'Məhsullarımız',
+    news: 'Xəbərlər',
+    support: 'Dəstək',
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, string>) }
+}
+
+export async function getFooterContent(): Promise<FooterContent> {
+  const value = await getSiteSetting('footer')
+  const defaults: FooterContent = {
+    tagline: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi',
+    copyright: 'FADAI. Bütün hüquqlar qorunur.',
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, string>) }
+}
+
+export async function getFAQItems(): Promise<FAQItem[]> {
+  const value = await getSiteSetting('faq')
+
+  if (!value || !Array.isArray(value)) {
+    return []
+  }
+
+  return value as unknown as FAQItem[]
 }

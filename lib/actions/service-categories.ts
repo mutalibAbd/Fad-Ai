@@ -14,15 +14,18 @@ export async function createServiceCategory(data: {
 }) {
   const supabase = createAdminClient()
 
-  const { error } = await (supabase.from('service_categories') as any).insert(data)
+  const { data: row, error } = await (supabase.from('service_categories') as any)
+    .insert(data)
+    .select('id')
+    .single()
 
   if (error) {
     return { error: error.message }
   }
 
   revalidatePath('/services')
-  revalidatePath('/admin/dashboard/service-categories')
-  return { success: true }
+  revalidatePath('/admin/dashboard/services')
+  return { success: true, id: row.id as string }
 }
 
 export async function updateServiceCategory(id: string, data: {
@@ -43,7 +46,7 @@ export async function updateServiceCategory(id: string, data: {
   }
 
   revalidatePath('/services')
-  revalidatePath('/admin/dashboard/service-categories')
+  revalidatePath('/admin/dashboard/services')
   return { success: true }
 }
 
@@ -57,6 +60,6 @@ export async function deleteServiceCategory(id: string) {
   }
 
   revalidatePath('/services')
-  revalidatePath('/admin/dashboard/service-categories')
+  revalidatePath('/admin/dashboard/services')
   return { success: true }
 }
