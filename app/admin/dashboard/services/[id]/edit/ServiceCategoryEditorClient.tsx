@@ -5,8 +5,25 @@ import { useRouter } from 'next/navigation';
 import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
-import ContentSectionsEditor, { parseSections, type ContentSection } from '@/components/admin/ContentSectionsEditor';
 import { ChevronDown } from 'lucide-react';
+
+/* ── Slug helper ── */
+
+function toSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/ə/g, 'e')
+    .replace(/ü/g, 'u')
+    .replace(/ö/g, 'o')
+    .replace(/ğ/g, 'g')
+    .replace(/ı/g, 'i')
+    .replace(/ş/g, 's')
+    .replace(/ç/g, 'c')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
 
 /* ── Types ── */
 
@@ -151,17 +168,16 @@ export default function ServiceCategoryEditorClient({ category, initialServices 
     setSvcError('');
     setSvcSuccess('');
 
-    const details = svc.details;
     const body = {
-      icon: svc.icon,
       title: svc.title,
-      slug: svc.slug || undefined,
+      slug: toSlug(svc.title) || undefined,
+      icon: svc.icon,
       description: svc.description,
       content: svc.content || undefined,
-      details,
+      details: svc.details,
       image_url: svc.image_url || undefined,
       category_id: category.id,
-      sort_order: svc.sort_order,
+      sort_order: idx,
       is_visible: svc.is_visible,
     };
 
@@ -305,47 +321,13 @@ export default function ServiceCategoryEditorClient({ category, initialServices 
                 {/* Expanded form */}
                 {isExpanded && (
                   <div className="px-5 pb-5 space-y-4 border-t border-slate-100 pt-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField label="Başlıq" name={`svc_title_${idx}`} value={svc.title} onChange={(v) => updateService(idx, 'title', v)} required />
-                      <FormField label="Slug" name={`svc_slug_${idx}`} value={svc.slug} onChange={(v) => updateService(idx, 'slug', v)} placeholder="service-slug" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField label="Icon (emoji)" name={`svc_icon_${idx}`} value={svc.icon} onChange={(v) => updateService(idx, 'icon', v)} placeholder="🛠️" />
-                      <FormField label="Sıra" name={`svc_sort_${idx}`} type="number" value={svc.sort_order} onChange={(v) => updateService(idx, 'sort_order', Number(v))} />
-                    </div>
+                    <FormField label="Başlıq" name={`svc_title_${idx}`} value={svc.title} onChange={(v) => updateService(idx, 'title', v)} required />
                     <ImageUpload bucket="services" value={svc.image_url} onChange={(v) => updateService(idx, 'image_url', v)} label="Xidmət şəkli" />
-                    <FormField label="Təsvir" name={`svc_desc_${idx}`} type="textarea" value={svc.description} onChange={(v) => updateService(idx, 'description', v)} rows={3} />
-                    <ContentSectionsEditor
-                      value={parseSections(svc.content)}
-                      onChange={(sections) => updateService(idx, 'content', sections.length > 0 ? JSON.stringify(sections) : '')}
-                    />
-                    <FormField
-                      label="Detallar (hər sətir ayrı element olacaq)"
-                      name={`svc_details_${idx}`}
-                      type="textarea"
-                      value={svc.details.join('\n')}
-                      onChange={(v) =>
-                        updateService(
-                          idx,
-                          'details',
-                          v.split('\n').map((l) => l.trim()).filter((l) => l.length > 0),
-                        )
-                      }
-                      rows={4}
-                      placeholder={"Birinci detal\nİkinci detal"}
-                    />
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        id={`svc_vis_${idx}`}
-                        checked={svc.is_visible}
-                        onChange={(e) => updateService(idx, 'is_visible', e.target.checked)}
-                        className="rounded border-slate-300"
-                      />
-                      <label htmlFor={`svc_vis_${idx}`} className="text-sm text-text-primary tracking-tight">
-                        Saytda göstər
-                      </label>
-                    </div>
+                    <FormField label="Qısa təsvir" name={`svc_desc_${idx}`} type="textarea" value={svc.description} onChange={(v) => updateService(idx, 'description', v)} rows={2} placeholder="Xidmət haqqında qısa məlumat" />
+
+                    <p className="text-xs text-text-secondary tracking-tight">
+                      URL: /services/{toSlug(svc.title) || '...'}
+                    </p>
 
                     <div className="flex items-center gap-2 pt-2">
                       <button
