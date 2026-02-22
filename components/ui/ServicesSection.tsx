@@ -292,12 +292,7 @@ export default function ServicesSection({ categories, title = 'Xidmətlərimiz' 
           </aside>
 
           {/* ── RIGHT CONTENT (Paginated Card Grid) ── */}
-          <div ref={mainRef} className="w-3/4 min-h-[620px]">
-            {/* Category heading */}
-            <h3 className="text-2xl md:text-3xl font-semibold tracking-tighter text-text-primary mb-8">
-              {activeCat?.title}
-            </h3>
-
+          <div ref={mainRef} className={`w-3/4 ${currentCards.length <= 3 ? 'min-h-[340px]' : 'min-h-[620px]'}`}>
             {/* Animated card grid */}
             <AnimatePresence mode="wait">
               <motion.div
