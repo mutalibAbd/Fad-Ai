@@ -34,6 +34,7 @@ export default async function EditSupportPage({
           slug: supportType.slug ?? '',
           description: supportType.description ?? '',
           content: supportType.content ?? '',
+          icon: supportType.icon ?? 'Headset',
           image_url: supportType.image_url ?? '',
           sort_order: supportType.sort_order ?? 0,
           is_visible: supportType.is_visible ?? true,

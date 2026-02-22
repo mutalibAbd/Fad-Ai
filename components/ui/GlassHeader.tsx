@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Dialog } from '@headlessui/react';
 import { CloseIcon } from '@/components/icons';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import Image from 'next/image';
 
 interface NavLink {
   label: string;
@@ -18,6 +19,7 @@ interface GlassHeaderProps {
 
 const defaultNavLinks: NavLink[] = [
   { label: 'Haqqımızda', href: '/about' },
+  { label: 'FAQ', href: '/faq' },
   { label: 'Əlaqə', href: '/contact' },
 ];
 
@@ -29,7 +31,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
       <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center">
         {/* Logo */}
         <Link href="/" className="text-2xl font-semibold tracking-tight text-primary">
-          {logo}
+          <Image src="/logo.svg" alt="FADAI Logo" width={140} height={40} />
         </Link>
 
         {/* Spacer */}
@@ -80,7 +82,7 @@ export default function GlassHeader({ logo = 'FADAI', navLinks = defaultNavLinks
               className="text-2xl font-semibold tracking-tight text-primary"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {logo}
+              <Image src="/logo.svg" alt="FADAI Logo" width={140} height={40} />
             </Link>
             <button
               type="button"

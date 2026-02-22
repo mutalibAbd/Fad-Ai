@@ -4,6 +4,42 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
+import {
+  Headset,
+  FileText,
+  ShieldCheck,
+  Wrench,
+  HelpCircle,
+  BookOpen,
+  MessageSquare,
+  Settings,
+  Phone,
+  Mail,
+  Monitor,
+  Heart,
+  Stethoscope,
+  Clock,
+  Users,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+const ICON_OPTIONS: { name: string; label: string; Icon: LucideIcon }[] = [
+  { name: 'Headset', label: 'Qulaqlıq', Icon: Headset },
+  { name: 'FileText', label: 'Sənəd', Icon: FileText },
+  { name: 'ShieldCheck', label: 'Təhlükəsizlik', Icon: ShieldCheck },
+  { name: 'Wrench', label: 'Alət', Icon: Wrench },
+  { name: 'HelpCircle', label: 'Kömək', Icon: HelpCircle },
+  { name: 'BookOpen', label: 'Kitab', Icon: BookOpen },
+  { name: 'MessageSquare', label: 'Mesaj', Icon: MessageSquare },
+  { name: 'Settings', label: 'Parametrlər', Icon: Settings },
+  { name: 'Phone', label: 'Telefon', Icon: Phone },
+  { name: 'Mail', label: 'E-poçt', Icon: Mail },
+  { name: 'Monitor', label: 'Monitor', Icon: Monitor },
+  { name: 'Heart', label: 'Ürək', Icon: Heart },
+  { name: 'Stethoscope', label: 'Stetoskop', Icon: Stethoscope },
+  { name: 'Clock', label: 'Saat', Icon: Clock },
+  { name: 'Users', label: 'İstifadəçilər', Icon: Users },
+];
 
 interface SupportFormProps {
   initialData?: {
@@ -12,6 +48,7 @@ interface SupportFormProps {
     slug: string;
     description: string;
     content: string;
+    icon: string;
     image_url: string;
     sort_order: number;
     is_visible: boolean;
@@ -26,6 +63,7 @@ export default function SupportForm({ initialData }: SupportFormProps) {
   const [slug, setSlug] = useState(initialData?.slug ?? '');
   const [description, setDescription] = useState(initialData?.description ?? '');
   const [content, setContent] = useState(initialData?.content ?? '');
+  const [icon, setIcon] = useState(initialData?.icon ?? 'Headset');
   const [imageUrl, setImageUrl] = useState(initialData?.image_url ?? '');
   const [sortOrder, setSortOrder] = useState(initialData?.sort_order ?? 0);
   const [isVisible, setIsVisible] = useState(initialData?.is_visible ?? true);
@@ -43,6 +81,7 @@ export default function SupportForm({ initialData }: SupportFormProps) {
       slug,
       description,
       content,
+      icon,
       image_url: imageUrl || undefined,
       sort_order: sortOrder,
       is_visible: isVisible,
@@ -76,6 +115,32 @@ export default function SupportForm({ initialData }: SupportFormProps) {
       <div className="grid grid-cols-2 gap-4">
         <FormField label="Başlıq" name="title" value={title} onChange={setTitle} required />
         <FormField label="Slug" name="slug" value={slug} onChange={setSlug} required placeholder="technical-support" />
+      </div>
+
+      {/* Icon Picker */}
+      <div>
+        <label className="block text-sm font-medium text-text-primary tracking-tight mb-2">
+          İkon
+        </label>
+        <div className="grid grid-cols-5 gap-3">
+          {ICON_OPTIONS.map(({ name, label, Icon }) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => setIcon(name)}
+              className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all ${
+                icon === name
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-slate-100 bg-white text-text-secondary hover:border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              <Icon className="w-6 h-6" strokeWidth={1.8} />
+              <span className="text-[10px] font-medium tracking-tight leading-tight text-center">
+                {label}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <FormField

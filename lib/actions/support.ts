@@ -8,6 +8,7 @@ export async function createSupportType(data: {
   slug: string
   description?: string
   content?: string
+  icon?: string
   image_url?: string
   sort_order?: number
   is_visible?: boolean
@@ -30,6 +31,7 @@ export async function updateSupportType(id: string, data: {
   slug?: string
   description?: string
   content?: string
+  icon?: string
   image_url?: string | null
   sort_order?: number
   is_visible?: boolean

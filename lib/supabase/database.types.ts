@@ -385,6 +385,7 @@ export interface Database {
           slug: string
           description: string | null
           content: string | null
+          icon: string
           image_url: string | null
           sort_order: number
           is_visible: boolean
@@ -397,6 +398,7 @@ export interface Database {
           slug: string
           description?: string | null
           content?: string | null
+          icon?: string
           image_url?: string | null
           sort_order?: number
           is_visible?: boolean
@@ -407,6 +409,7 @@ export interface Database {
           slug?: string
           description?: string | null
           content?: string | null
+          icon?: string
           image_url?: string | null
           sort_order?: number
           is_visible?: boolean
@@ -444,6 +447,38 @@ export interface Database {
           content?: string | null
           image_url?: string | null
           published_at?: string
+          is_visible?: boolean
+        }
+        Relationships: []
+      }
+      page_blocks: {
+        Row: {
+          id: string
+          page_slug: string
+          block_type: string
+          title: string
+          content: Json
+          sort_order: number
+          is_visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          page_slug: string
+          block_type: string
+          title?: string
+          content?: Json
+          sort_order?: number
+          is_visible?: boolean
+        }
+        Update: {
+          id?: string
+          page_slug?: string
+          block_type?: string
+          title?: string
+          content?: Json
+          sort_order?: number
           is_visible?: boolean
         }
         Relationships: []
