@@ -46,3 +46,4 @@ supabase/.temp/
 # misc
 *.pem
 tmpclaude-*
+nul

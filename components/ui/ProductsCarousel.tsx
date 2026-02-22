@@ -67,15 +67,19 @@ export default function ProductsCarousel({ products, title = 'Məhsullarımız' 
 
   /* ---- Navigation ---- */
   const goTo = useCallback((i: number) => {
+    // Clamp to valid range: never go beyond clone positions
+    if (i < 0 || i > n + 1) return;
     setTransition(true);
     setSlideIndex(i);
-  }, []);
+  }, [n]);
 
   const next = useCallback(() => goTo(slideIndex + 1), [slideIndex, goTo]);
   const prev = useCallback(() => goTo(slideIndex - 1), [slideIndex, goTo]);
 
   /* ---- Infinite-loop: instant reposition after CSS transition ---- */
-  const onTransEnd = useCallback(() => {
+  const onTransEnd = useCallback((e: React.TransitionEvent) => {
+    // Ignore bubbled events from child card transitions
+    if (e.target !== e.currentTarget) return;
     if (slideIndex === 0) {
       setTransition(false);
       setSlideIndex(n);

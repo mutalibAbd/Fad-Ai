@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from '@/lib/actions/auth';
+import Image from 'next/image';
 
 const navItems = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
@@ -26,7 +27,7 @@ export default function AdminSidebar() {
       {/* Logo */}
       <div className="px-6 py-6 border-b border-slate-100">
         <Link href="/admin/dashboard" className="text-xl font-semibold tracking-tight text-primary">
-          FADAI
+          <Image src="/logo.svg" alt="FADAI Logo" width={140} height={40} />
         </Link>
         <p className="text-xs text-text-secondary tracking-tight mt-1">Admin Panel</p>
       </div>

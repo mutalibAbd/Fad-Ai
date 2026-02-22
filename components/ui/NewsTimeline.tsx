@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import type { News } from '@/lib/types';
@@ -10,15 +10,32 @@ interface NewsTimelineProps {
   title?: string;
 }
 
-export default function NewsTimeline({ articles, title = 'Xəbərlər' }: NewsTimelineProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
+function ScrollProgressLine({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start end', 'end start'],
   });
 
   const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+
+  return (
+    <motion.div
+      className="absolute left-5 md:left-1/2 md:-translate-x-px top-0 w-0.5 bg-primary"
+      style={{
+        height: lineHeight,
+        boxShadow: '0 0 8px var(--primary), 0 0 20px var(--primary)',
+      }}
+    />
+  );
+}
+
+export default function NewsTimeline({ articles, title = 'Xəbərlər' }: NewsTimelineProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (articles.length === 0) return null;
 
@@ -33,14 +50,8 @@ export default function NewsTimeline({ articles, title = 'Xəbərlər' }: NewsTi
           {/* Static background line */}
           <div className="absolute left-5 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-slate-200/50 dark:bg-slate-700/50" />
 
-          {/* Animated glowing fill line */}
-          <motion.div
-            className="absolute left-5 md:left-1/2 md:-translate-x-px top-0 w-0.5 bg-primary"
-            style={{
-              height: lineHeight,
-              boxShadow: '0 0 8px var(--primary), 0 0 20px var(--primary)',
-            }}
-          />
+          {/* Animated glowing fill line - only render after mount so the ref is hydrated */}
+          {mounted && <ScrollProgressLine containerRef={containerRef} />}
 
           {/* Timeline items */}
           <div className="space-y-12 md:space-y-16">

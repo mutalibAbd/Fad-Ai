@@ -81,7 +81,7 @@ export default function SupportSection({ supportTypes, title = 'Dəstək' }: Sup
             );
           })}
 
-          {/* FAQ card — always visible, not admin-controlled */}
+          {/* FAQ card — always visible, not admin-controlled
           <Link
             href="/faq"
             className="text-center space-y-5 w-64 group"
@@ -95,7 +95,7 @@ export default function SupportSection({ supportTypes, title = 'Dəstək' }: Sup
             <p className="text-base text-slate-600 dark:text-slate-400 tracking-tight leading-relaxed max-w-xs mx-auto">
               Ən çox soruşulan suallar vəcavabları
             </p>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </section>

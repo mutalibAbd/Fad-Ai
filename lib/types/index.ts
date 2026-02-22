@@ -137,3 +137,46 @@ export interface FAQItem {
   question: string
   answer: string
 }
+
+// ── Page Block Types ──
+
+export type BlockType = 'zigzag_hero' | 'journey_list' | 'values_grid'
+
+export interface ZigzagHeroContent {
+  text: string
+  images: string[]
+}
+
+export interface JourneyListItem {
+  image_url: string
+  subtitle: string
+  description: string
+}
+
+export interface JourneyListContent {
+  items: JourneyListItem[]
+}
+
+export interface ValuesGridItem {
+  icon: string
+  title: string
+  description: string
+}
+
+export interface ValuesGridContent {
+  items: ValuesGridItem[]
+}
+
+export type BlockContent = ZigzagHeroContent | JourneyListContent | ValuesGridContent
+
+export interface PageBlock {
+  id: string
+  page_slug: string
+  block_type: BlockType
+  title: string
+  content: BlockContent
+  sort_order: number
+  is_visible: boolean
+  created_at: string
+  updated_at: string
+}

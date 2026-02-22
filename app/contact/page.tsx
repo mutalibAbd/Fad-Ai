@@ -23,18 +23,18 @@ export default async function ContactPage() {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-16 bg-background-light">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-4">
-              <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-text-primary mb-6">
-                Bizimlə Əlaqə
-              </h1>
-              <p className="text-xl text-text-secondary tracking-tight max-w-2xl mx-auto">
-                Suallarınız üçün bizimlə əlaqə saxlayın
-              </p>
-            </div>
-          </div>
-        </section>
+        <section className="py-16 bg-gradient-to-r from-[#082f6b] via-[#0086a8] to-[#00d4d1]">
+  <div className="max-w-7xl mx-auto px-6">
+    <div className="text-center mb-4">
+      <h1 className="text-5xl md:text-6xl font-semibold tracking-tight text-white mb-6">
+        Bizimlə Əlaqə
+      </h1>
+      <p className="text-xl text-gray-100 tracking-tight max-w-2xl mx-auto">
+        Suallarınız üçün bizimlə əlaqə saxlayın
+      </p>
+    </div>
+  </div>
+</section>
 
         {/* Contact Content */}
         <section className="py-16">

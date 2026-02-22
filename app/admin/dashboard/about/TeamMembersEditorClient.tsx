@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
-import type { AboutContent, AboutStat } from '@/lib/types';
 
 interface TeamMember {
   id: string;
@@ -19,25 +18,12 @@ interface TeamMember {
 }
 
 interface Props {
-  about: AboutContent;
-  stats: AboutStat[];
   teamMembers: TeamMember[];
 }
 
-export default function AboutEditorClient({ about, stats, teamMembers }: Props) {
+export default function TeamMembersEditorClient({ teamMembers }: Props) {
   const router = useRouter();
 
-  // About content
-  const [storyTitle, setStoryTitle] = useState(about.story_title);
-  const [storyText, setStoryText] = useState(about.story_text);
-  const [missionText, setMissionText] = useState(about.mission_text);
-
-  // Stats
-  const [statList, setStatList] = useState<AboutStat[]>(
-    stats.length > 0 ? stats : [{ label: '', value: '' }]
-  );
-
-  // Team
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -61,55 +47,6 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
-  const handleSaveAbout = async () => {
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
-    try {
-      const { updateSiteSetting } = await import('@/lib/actions/settings');
-      const result = await updateSiteSetting('about', {
-        story_title: storyTitle,
-        story_text: storyText,
-        mission_text: missionText,
-      });
-
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setSuccess('Haqqımızda məzmunu yeniləndi');
-        router.refresh();
-      }
-    } catch {
-      setError('Xəta baş verdi');
-    }
-
-    setLoading(false);
-  };
-
-  const handleSaveStats = async () => {
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
-    try {
-      const { updateSiteSetting } = await import('@/lib/actions/settings');
-      const filtered = statList.filter((s) => s.label.trim() !== '');
-      const result = await updateSiteSetting('about_stats', JSON.parse(JSON.stringify(filtered)));
-
-      if (result.error) {
-        setError(result.error);
-      } else {
-        setSuccess('Statistikalar yeniləndi');
-        router.refresh();
-      }
-    } catch {
-      setError('Xəta baş verdi');
-    }
-
-    setLoading(false);
-  };
-
   const handleDeleteTeamMember = async () => {
     if (!deleteId) return;
     setDeleteLoading(true);
@@ -120,7 +57,7 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
       setDeleteId(null);
       router.refresh();
     } catch {
-      setError('Xəta baş verdi');
+      setError('Xeta bash verdi');
     }
 
     setDeleteLoading(false);
@@ -149,11 +86,11 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
         setNewImageUrl('');
         setNewLinkedinUrl('');
         setShowNewForm(false);
-        setSuccess('Komanda üzvü əlavə edildi');
+        setSuccess('Komanda uzvu elave edildi');
         router.refresh();
       }
     } catch {
-      setError('Xəta baş verdi');
+      setError('Xeta bash verdi');
     }
 
     setLoading(false);
@@ -191,113 +128,29 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
         setError(result.error);
       } else {
         setEditingId(null);
-        setSuccess('Komanda üzvü yeniləndi');
+        setSuccess('Komanda uzvu yenilendi');
         router.refresh();
       }
     } catch {
-      setError('Xəta baş verdi');
+      setError('Xeta bash verdi');
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="space-y-10 max-w-2xl">
+    <>
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-3">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4">
           <p className="text-red-800 tracking-tight text-sm">{error}</p>
         </div>
       )}
       {success && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-3">
+        <div className="bg-green-50 border border-green-200 rounded-xl p-3 mb-4">
           <p className="text-green-800 tracking-tight text-sm">{success}</p>
         </div>
       )}
 
-      {/* About Content */}
-      <section className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <h2 className="text-lg font-semibold tracking-tight text-text-primary mb-5">
-          Şirkət Haqqında
-        </h2>
-        <div className="space-y-4">
-          <FormField label="Bölmə başlığı" name="story_title" value={storyTitle} onChange={setStoryTitle} />
-          <FormField label="Hekayə mətni" name="story_text" type="textarea" value={storyText} onChange={setStoryText} rows={5} />
-          <FormField label="Missiya mətni" name="mission_text" type="textarea" value={missionText} onChange={setMissionText} rows={3} />
-          <button
-            type="button"
-            onClick={handleSaveAbout}
-            disabled={loading}
-            className="bg-primary text-white px-6 py-2.5 rounded-xl text-sm font-medium tracking-tight hover:bg-primary-600 transition-colors disabled:opacity-50"
-          >
-            {loading ? 'Saxlanılır...' : 'Yadda saxla'}
-          </button>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <h2 className="text-lg font-semibold tracking-tight text-text-primary mb-5">
-          Statistikalar
-        </h2>
-        <div className="space-y-3">
-          {statList.map((stat, index) => (
-            <div key={index} className="flex items-end gap-3">
-              <div className="flex-1">
-                <FormField
-                  label="Etiket"
-                  name={`stat_label_${index}`}
-                  value={stat.label}
-                  onChange={(v) =>
-                    setStatList((prev) =>
-                      prev.map((s, i) => (i === index ? { ...s, label: v } : s))
-                    )
-                  }
-                  placeholder="Müştərilər"
-                />
-              </div>
-              <div className="w-32">
-                <FormField
-                  label="Dəyər"
-                  name={`stat_value_${index}`}
-                  value={stat.value}
-                  onChange={(v) =>
-                    setStatList((prev) =>
-                      prev.map((s, i) => (i === index ? { ...s, value: v } : s))
-                    )
-                  }
-                  placeholder="50+"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() => setStatList((prev) => prev.filter((_, i) => i !== index))}
-                className="pb-3 text-red-500 hover:text-red-700 text-sm font-medium tracking-tight"
-              >
-                Sil
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() => setStatList((prev) => [...prev, { label: '', value: '' }])}
-            className="text-sm font-medium tracking-tight text-primary hover:text-primary-600"
-          >
-            + Yeni statistika
-          </button>
-          <div>
-            <button
-              type="button"
-              onClick={handleSaveStats}
-              disabled={loading}
-              className="bg-primary text-white px-6 py-2.5 rounded-xl text-sm font-medium tracking-tight hover:bg-primary-600 transition-colors disabled:opacity-50"
-            >
-              {loading ? 'Saxlanılır...' : 'Statistikaları yadda saxla'}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Team Members */}
       <section className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-semibold tracking-tight text-text-primary">
@@ -308,16 +161,16 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
             onClick={() => setShowNewForm(true)}
             className="text-sm font-medium tracking-tight text-primary hover:text-primary-600"
           >
-            + Yeni üzv
+            + Yeni uzv
           </button>
         </div>
 
         {showNewForm && (
           <div className="bg-slate-50/50 rounded-xl border border-slate-100 p-4 mb-4 space-y-3">
             <FormField label="Ad" name="new_name" value={newName} onChange={setNewName} required />
-            <FormField label="Vəzifə" name="new_role" value={newRole} onChange={setNewRole} required />
-            <ImageUpload bucket="team" value={newImageUrl} onChange={setNewImageUrl} label="Şəkil" />
-            <FormField label="Haqqında" name="new_bio" type="textarea" value={newBio} onChange={setNewBio} rows={3} placeholder="Qısa bioqrafiya..." />
+            <FormField label="Vezife" name="new_role" value={newRole} onChange={setNewRole} required />
+            <ImageUpload bucket="team" value={newImageUrl} onChange={setNewImageUrl} label="Sekil" />
+            <FormField label="Haqqinda" name="new_bio" type="textarea" value={newBio} onChange={setNewBio} rows={3} placeholder="Qisa bioqrafiya..." />
             <FormField label="LinkedIn URL" name="new_linkedin" type="url" value={newLinkedinUrl} onChange={setNewLinkedinUrl} placeholder="https://linkedin.com/in/..." />
             <div className="flex gap-2">
               <button
@@ -326,7 +179,7 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
                 disabled={loading}
                 className="bg-primary text-white px-4 py-2 rounded-xl text-sm font-medium tracking-tight hover:bg-primary-600 transition-colors disabled:opacity-50"
               >
-                Əlavə et
+                Elave et
               </button>
               <button
                 type="button"
@@ -340,7 +193,7 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
                 }}
                 className="px-4 py-2 rounded-xl text-sm font-medium tracking-tight text-text-secondary hover:bg-slate-100 transition-colors"
               >
-                Ləğv et
+                Legv et
               </button>
             </div>
           </div>
@@ -348,16 +201,16 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
 
         <div className="divide-y divide-slate-100">
           {teamMembers.length === 0 ? (
-            <p className="py-4 text-sm text-text-secondary tracking-tight">Komanda üzvü yoxdur</p>
+            <p className="py-4 text-sm text-text-secondary tracking-tight">Komanda uzvu yoxdur</p>
           ) : (
             teamMembers.map((member) => (
               <div key={member.id} className="py-3">
                 {editingId === member.id ? (
                   <div className="bg-slate-50/50 rounded-xl border border-slate-100 p-4 space-y-3">
                     <FormField label="Ad" name={`edit_name_${member.id}`} value={editName} onChange={setEditName} required />
-                    <FormField label="Vəzifə" name={`edit_role_${member.id}`} value={editRole} onChange={setEditRole} required />
-                    <ImageUpload bucket="team" value={editImageUrl} onChange={setEditImageUrl} label="Şəkil" />
-                    <FormField label="Haqqında" name={`edit_bio_${member.id}`} type="textarea" value={editBio} onChange={setEditBio} rows={3} placeholder="Qısa bioqrafiya..." />
+                    <FormField label="Vezife" name={`edit_role_${member.id}`} value={editRole} onChange={setEditRole} required />
+                    <ImageUpload bucket="team" value={editImageUrl} onChange={setEditImageUrl} label="Sekil" />
+                    <FormField label="Haqqinda" name={`edit_bio_${member.id}`} type="textarea" value={editBio} onChange={setEditBio} rows={3} placeholder="Qisa bioqrafiya..." />
                     <FormField label="LinkedIn URL" name={`edit_linkedin_${member.id}`} type="url" value={editLinkedinUrl} onChange={setEditLinkedinUrl} placeholder="https://linkedin.com/in/..." />
                     <div className="flex gap-2">
                       <button
@@ -366,14 +219,14 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
                         disabled={loading}
                         className="bg-primary text-white px-4 py-2 rounded-xl text-sm font-medium tracking-tight hover:bg-primary-600 transition-colors disabled:opacity-50"
                       >
-                        {loading ? 'Saxlanılır...' : 'Yadda saxla'}
+                        {loading ? 'Saxlanilir...' : 'Yadda saxla'}
                       </button>
                       <button
                         type="button"
                         onClick={cancelEditing}
                         className="px-4 py-2 rounded-xl text-sm font-medium tracking-tight text-text-secondary hover:bg-slate-100 transition-colors"
                       >
-                        Ləğv et
+                        Legv et
                       </button>
                     </div>
                   </div>
@@ -402,7 +255,7 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
                         onClick={() => startEditing(member)}
                         className="text-xs font-medium tracking-tight text-primary hover:text-primary-600"
                       >
-                        Redaktə
+                        Redakte
                       </button>
                       <button
                         type="button"
@@ -425,9 +278,9 @@ export default function AboutEditorClient({ about, stats, teamMembers }: Props) 
         onClose={() => setDeleteId(null)}
         onConfirm={handleDeleteTeamMember}
         loading={deleteLoading}
-        title="Komanda üzvünü silmək istəyirsiniz?"
-        message="Bu əməliyyat geri qaytarıla bilməz."
+        title="Komanda uzvunu silmek isteyirsiniz?"
+        message="Bu emeliyyat geri qaytarila bilmez."
       />
-    </div>
+    </>
   );
 }

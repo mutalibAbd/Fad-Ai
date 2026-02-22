@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronDown } from 'lucide-react';
 import type { ServiceCategoryWithServices } from '@/lib/types';
 
 interface ServicesSectionProps {
@@ -12,10 +13,24 @@ interface ServicesSectionProps {
 
 export default function ServicesSection({ categories, title = 'Xidmətlərimiz' }: ServicesSectionProps) {
   const [activeCategoryId, setActiveCategoryId] = useState(categories[0]?.id ?? '');
+  const [openIds, setOpenIds] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const contentRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  // IntersectionObserver scrollspy
+  const toggleAccordion = useCallback((id: string) => {
+    setOpenIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  // IntersectionObserver scrollspy (desktop only)
   useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    if (!mq.matches) return;
+
     const observers: IntersectionObserver[] = [];
 
     categories.forEach((cat) => {
@@ -45,9 +60,93 @@ export default function ServicesSection({ categories, title = 'Xidmətlərimiz' 
   return (
     <section className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+
+        {/* ===== MOBILE: Accordion layout (< 768px) ===== */}
+        <div className="md:hidden">
+          <h2 className="text-3xl font-semibold tracking-tighter text-text-primary mb-8">
+            {title}
+          </h2>
+
+          <div className="space-y-3">
+            {categories.map((cat) => {
+              const isOpen = openIds.has(cat.id);
+              const contentEl = contentRefs.current.get(cat.id);
+              const scrollHeight = contentEl?.scrollHeight ?? 0;
+
+              return (
+                <div
+                  key={cat.id}
+                  className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-card overflow-hidden"
+                >
+                  {/* Accordion header */}
+                  <button
+                    onClick={() => toggleAccordion(cat.id)}
+                    className="w-full flex items-center justify-between px-5 py-4 text-left"
+                  >
+                    <span className="text-lg font-semibold tracking-tight text-text-primary">
+                      {cat.title}
+                    </span>
+                    <ChevronDown
+                      className={`w-5 h-5 text-text-secondary transition-transform duration-300 ${
+                        isOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {/* Accordion body */}
+                  <div
+                    ref={(el) => {
+                      if (el) contentRefs.current.set(cat.id, el);
+                    }}
+                    className="transition-[max-height] duration-300 ease-in-out overflow-hidden"
+                    style={{ maxHeight: isOpen ? `${scrollHeight}px` : '0px' }}
+                  >
+                    <div className="px-3 pb-3 space-y-1">
+                      {cat.services.map((svc) => (
+                        <Link
+                          key={svc.id}
+                          href={svc.slug ? `/services/${svc.slug}` : '#'}
+                          className="group flex gap-4 p-3 rounded-xl hover:bg-background-light transition-colors duration-200"
+                        >
+                          <div className="w-14 h-14 rounded-lg overflow-hidden bg-primary/5 flex-shrink-0">
+                            {svc.image_url ? (
+                              <Image
+                                src={svc.image_url}
+                                alt={svc.title}
+                                width={56}
+                                height={56}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-xl">
+                                {svc.icon || '🔧'}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-base font-semibold tracking-tight text-text-primary group-hover:text-primary transition-colors">
+                              {svc.title}
+                            </h4>
+                            {svc.description && (
+                              <p className="text-sm text-text-secondary tracking-tight mt-1 line-clamp-2 leading-relaxed">
+                                {svc.description}
+                              </p>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ===== DESKTOP: Sticky nav + scrollable content (>= 768px) ===== */}
+        <div className="hidden md:grid md:grid-cols-2 gap-16">
           {/* LEFT: Sticky category list */}
-          <div className="hidden lg:block">
+          <div>
             <div className="sticky top-32">
               <h2 className="text-4xl sm:text-5xl font-semibold tracking-tighter text-text-primary mb-10">
                 {title}
@@ -67,7 +166,6 @@ export default function ServicesSection({ categories, title = 'Xidmətlərimiz' 
                     }`}
                   >
                     {cat.title}
-                    {/* Animated underline */}
                     <span
                       className={`absolute -bottom-0.5 left-0 h-0.5 bg-primary transition-all duration-300 ${
                         activeCategoryId === cat.id ? 'w-full' : 'w-0'
@@ -88,11 +186,6 @@ export default function ServicesSection({ categories, title = 'Xidmətlərimiz' 
                   if (el) sectionRefs.current.set(cat.id, el);
                 }}
               >
-                {/* Category title visible on mobile where sticky nav is hidden */}
-                <h3 className="text-2xl font-semibold tracking-tight text-text-primary mb-6 lg:hidden">
-                  {cat.title}
-                </h3>
-
                 <div className="space-y-6">
                   {cat.services.map((svc) => (
                     <Link
@@ -100,7 +193,6 @@ export default function ServicesSection({ categories, title = 'Xidmətlərimiz' 
                       href={svc.slug ? `/services/${svc.slug}` : '#'}
                       className="group flex gap-5 p-5 rounded-2xl hover:bg-background-light transition-colors duration-200"
                     >
-                      {/* Service image thumbnail */}
                       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-primary/5 flex-shrink-0">
                         {svc.image_url ? (
                           <Image
@@ -116,8 +208,6 @@ export default function ServicesSection({ categories, title = 'Xidmətlərimiz' 
                           </div>
                         )}
                       </div>
-
-                      {/* Service text */}
                       <div className="flex-1 min-w-0">
                         <h4 className="text-lg font-semibold tracking-tight text-text-primary group-hover:text-primary transition-colors">
                           {svc.title}
@@ -135,6 +225,7 @@ export default function ServicesSection({ categories, title = 'Xidmətlərimiz' 
             ))}
           </div>
         </div>
+
       </div>
     </section>
   );

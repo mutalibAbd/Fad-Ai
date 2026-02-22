@@ -1,7 +1,10 @@
 import { createAdminClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
-import { getAboutContent, getAboutStats } from '@/lib/queries/site-settings';
-import AboutEditorClient from './AboutEditorClient';
+import { getAllPageBlocks } from '@/lib/queries/page-blocks';
+import PageBlocksEditorClient from './PageBlocksEditorClient';
+import TeamMembersEditorClient from './TeamMembersEditorClient';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Haqqımızda | Admin | FADAI',
@@ -9,8 +12,7 @@ export const metadata = {
 
 export default async function AdminAboutPage() {
   const supabase = createAdminClient();
-  const about = await getAboutContent();
-  const stats = await getAboutStats();
+  const blocks = await getAllPageBlocks('about');
   const { data: teamMembers } = await supabase
     .from('team_members')
     .select('*')
@@ -21,11 +23,10 @@ export default async function AdminAboutPage() {
       <h1 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
         Haqqımızda Səhifəsi
       </h1>
-      <AboutEditorClient
-        about={about}
-        stats={stats}
-        teamMembers={teamMembers ?? []}
-      />
+      <div className="space-y-10 max-w-2xl">
+        <PageBlocksEditorClient initialBlocks={blocks} pageSlug="about" />
+        <TeamMembersEditorClient teamMembers={teamMembers ?? []} />
+      </div>
     </div>
   );
 }
