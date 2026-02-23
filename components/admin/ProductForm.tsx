@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
-import ContentSectionsEditor, { parseSections, type ContentSection } from '@/components/admin/ContentSectionsEditor';
 
 interface Feature {
   id: string;
@@ -21,7 +20,6 @@ interface ProductFormProps {
     title: string;
     description: string;
     long_description: string;
-    content: string;
     specifications: Record<string, string>;
     image_url: string;
     sort_order: number;
@@ -39,7 +37,6 @@ export default function ProductForm({ initialData }: ProductFormProps) {
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [description, setDescription] = useState(initialData?.description ?? '');
   const [longDescription, setLongDescription] = useState(initialData?.long_description ?? '');
-  const [sections, setSections] = useState<ContentSection[]>(parseSections(initialData?.content));
   const [imageUrl, setImageUrl] = useState(initialData?.image_url ?? '');
   const [sortOrder, setSortOrder] = useState(initialData?.sort_order ?? 0);
   const [isVisible, setIsVisible] = useState(initialData?.is_visible ?? true);
@@ -77,7 +74,6 @@ export default function ProductForm({ initialData }: ProductFormProps) {
       title,
       description,
       long_description: longDescription,
-      content: sections.length > 0 ? JSON.stringify(sections) : '',
       specifications,
       image_url: imageUrl,
       sort_order: sortOrder,
@@ -187,8 +183,6 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         <FormField label="Qısa təsvir" name="description" type="textarea" value={description} onChange={setDescription} rows={3} />
 
         <FormField label="Ətraflı təsvir" name="long_description" type="textarea" value={longDescription} onChange={setLongDescription} rows={6} />
-
-        <ContentSectionsEditor value={sections} onChange={setSections} />
 
         <FormField
           label="Spesifikasiyalar (hər sətir: açar: dəyər)"

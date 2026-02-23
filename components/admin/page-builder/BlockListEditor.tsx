@@ -112,7 +112,7 @@ export default function BlockListEditor({ initialBlocks, pageSlug }: BlockListEd
 
     try {
       const { deletePageBlock } = await import('@/lib/actions/page-blocks');
-      const result = await deletePageBlock(id);
+      const result = await deletePageBlock(id, pageSlug);
 
       if (result.error) {
         setError(result.error);
@@ -132,7 +132,7 @@ export default function BlockListEditor({ initialBlocks, pageSlug }: BlockListEd
     try {
       const { updatePageBlock } = await import('@/lib/actions/page-blocks');
       for (const block of blocks) {
-        const result = await updatePageBlock(block.id, {
+        const result = await updatePageBlock(block.id, pageSlug, {
           title: block.title,
           content: block.content as any,
           is_visible: block.is_visible,

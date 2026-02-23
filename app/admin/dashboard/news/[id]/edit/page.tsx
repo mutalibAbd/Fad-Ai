@@ -3,6 +3,8 @@ import { createAdminClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import NewsForm from '@/components/admin/NewsForm';
+import { getAllPageBlocks } from '@/lib/queries/page-blocks';
+import PageBlocksEditorClient from '@/components/admin/PageBlocksEditorClient';
 
 export const metadata = {
   title: 'Xəbəri Redaktə Et | Admin | FADAI',
@@ -24,6 +26,9 @@ export default async function EditNewsPage({
 
   if (!newsItem) notFound();
 
+  const pageSlug = `news/${newsItem.slug}`;
+  const blocks = await getAllPageBlocks(pageSlug);
+
   return (
     <div>
       <AdminPageHeader title="Xəbəri Redaktə Et" />
@@ -39,6 +44,9 @@ export default async function EditNewsPage({
           is_visible: newsItem.is_visible ?? true,
         }}
       />
+      <div className="mt-10 max-w-2xl">
+        <PageBlocksEditorClient initialBlocks={blocks} pageSlug={pageSlug} />
+      </div>
     </div>
   );
 }

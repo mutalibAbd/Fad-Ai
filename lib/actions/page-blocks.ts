@@ -4,6 +4,14 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { Json } from '@/lib/supabase/database.types'
 
+function getAdminBasePath(pageSlug: string): string {
+  // "about" -> "about"
+  // "products/my-product" -> "products"
+  // "news/my-article" -> "news"
+  // "services/my-service" -> "services"
+  return pageSlug.split('/')[0]
+}
+
 export async function createPageBlock(data: {
   page_slug: string
   block_type: string
@@ -24,11 +32,11 @@ export async function createPageBlock(data: {
   }
 
   revalidatePath(`/${data.page_slug}`)
-  revalidatePath('/admin/dashboard/about')
+  revalidatePath(`/admin/dashboard/${getAdminBasePath(data.page_slug)}`)
   return { success: true, block }
 }
 
-export async function updatePageBlock(id: string, data: {
+export async function updatePageBlock(id: string, pageSlug: string, data: {
   title?: string
   content?: Json
   sort_order?: number
@@ -44,12 +52,12 @@ export async function updatePageBlock(id: string, data: {
     return { error: error.message }
   }
 
-  revalidatePath('/about')
-  revalidatePath('/admin/dashboard/about')
+  revalidatePath(`/${pageSlug}`)
+  revalidatePath(`/admin/dashboard/${getAdminBasePath(pageSlug)}`)
   return { success: true }
 }
 
-export async function deletePageBlock(id: string) {
+export async function deletePageBlock(id: string, pageSlug: string) {
   const supabase = createAdminClient()
 
   const { error } = await (supabase.from('page_blocks') as any)
@@ -60,8 +68,8 @@ export async function deletePageBlock(id: string) {
     return { error: error.message }
   }
 
-  revalidatePath('/about')
-  revalidatePath('/admin/dashboard/about')
+  revalidatePath(`/${pageSlug}`)
+  revalidatePath(`/admin/dashboard/${getAdminBasePath(pageSlug)}`)
   return { success: true }
 }
 
@@ -85,6 +93,6 @@ export async function reorderPageBlocks(
   }
 
   revalidatePath(`/${pageSlug}`)
-  revalidatePath('/admin/dashboard/about')
+  revalidatePath(`/admin/dashboard/${getAdminBasePath(pageSlug)}`)
   return { success: true }
 }

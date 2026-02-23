@@ -4,8 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getServiceBySlug, getAllServiceSlugs } from '@/lib/queries/services';
-import Markdown from 'react-markdown';
-import { parseSections } from '@/lib/utils/content-sections';
+import { getVisiblePageBlocks } from '@/lib/queries/page-blocks';
+import { BlockRenderer } from '@/components/sections/page-blocks';
 
 export const revalidate = 60;
 
@@ -43,17 +43,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
   }
 
   const details = Array.isArray(service.details) ? service.details as string[] : [];
-  const sections = parseSections(service.content);
-  const hasSections = sections.length > 0;
-
-  function sectionId(heading: string, idx: number) {
-    const s = heading
-      .toLowerCase()
-      .replace(/[^a-z0-9əüöğışçı\s]+/gi, '')
-      .replace(/\s+/g, '-')
-      .replace(/(^-|-$)/g, '');
-    return s || `section-${idx}`;
-  }
+  const blocks = await getVisiblePageBlocks(`services/${slug}`);
 
   return (
     <>
@@ -107,47 +97,6 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
           </div>
         </section>
 
-        {/* Two-Column Content: Sticky ToC + Markdown Sections */}
-        {hasSections && (
-          <section className="py-16">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-                {/* Sticky Table of Contents */}
-                <nav className="lg:w-56 flex-shrink-0">
-                  <div className="lg:sticky lg:top-24 space-y-1">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-text-secondary mb-3">
-                      Mündəricat
-                    </h3>
-                    {sections.map((s, i) => (
-                      <a
-                        key={i}
-                        href={`#${sectionId(s.heading, i)}`}
-                        className="block text-sm text-text-secondary hover:text-primary tracking-tight py-1.5 border-l-2 border-transparent hover:border-primary pl-3 transition-colors duration-200"
-                      >
-                        {s.heading}
-                      </a>
-                    ))}
-                  </div>
-                </nav>
-
-                {/* Content Sections */}
-                <div className="flex-1 min-w-0 space-y-14">
-                  {sections.map((s, i) => (
-                    <div key={i} id={sectionId(s.heading, i)}>
-                      <h2 className="text-2xl font-semibold tracking-tight text-text-primary mb-6">
-                        {s.heading}
-                      </h2>
-                      <div className="prose prose-slate max-w-none dark:prose-invert prose-headings:tracking-tight prose-p:tracking-tight prose-p:leading-relaxed prose-p:text-text-secondary prose-headings:text-text-primary prose-strong:text-text-primary prose-li:text-text-secondary">
-                        <Markdown>{s.body}</Markdown>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Details List */}
         {details.length > 0 && (
           <section className="py-16 bg-background-light">
@@ -166,6 +115,11 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             </div>
           </section>
         )}
+
+        {/* Dynamic Page Blocks */}
+        {blocks.map((block, index) => (
+          <BlockRenderer key={block.id} block={block} index={index} />
+        ))}
 
         {/* CTA Section */}
         <section className="py-20">

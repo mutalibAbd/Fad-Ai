@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getNewsBySlug, getAllNewsSlugs } from '@/lib/queries/news';
+import { getVisiblePageBlocks } from '@/lib/queries/page-blocks';
+import { BlockRenderer } from '@/components/sections/page-blocks';
 
 export const revalidate = 60;
 
@@ -45,6 +47,8 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     month: 'long',
     day: 'numeric',
   });
+
+  const blocks = await getVisiblePageBlocks(`news/${slug}`);
 
   return (
     <>
@@ -108,6 +112,11 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
             </Link>
           </div>
         </section>
+
+        {/* Dynamic Page Blocks */}
+        {blocks.map((block, index) => (
+          <BlockRenderer key={block.id} block={block} index={index} />
+        ))}
 
         {/* CTA Section */}
         <section className="py-20 bg-background-light">

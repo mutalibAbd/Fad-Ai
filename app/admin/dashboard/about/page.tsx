@@ -1,7 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
 import { getAllPageBlocks } from '@/lib/queries/page-blocks';
-import PageBlocksEditorClient from './PageBlocksEditorClient';
+import PageBlocksEditorClient from '@/components/admin/PageBlocksEditorClient';
 import TeamMembersEditorClient from './TeamMembersEditorClient';
 
 export const dynamic = 'force-dynamic';

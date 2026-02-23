@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
 import DeleteConfirmDialog from '@/components/admin/DeleteConfirmDialog';
@@ -328,6 +329,15 @@ export default function ServiceCategoryEditorClient({ category, initialServices 
                     <p className="text-xs text-text-secondary tracking-tight">
                       URL: /services/{toSlug(svc.title) || '...'}
                     </p>
+
+                    {!svc._isNew && (
+                      <Link
+                        href={`/admin/dashboard/services/service-blocks/${svc.id}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary-600 tracking-tight transition-colors"
+                      >
+                        Səhifə blokları &rarr;
+                      </Link>
+                    )}
 
                     <div className="flex items-center gap-2 pt-2">
                       <button
