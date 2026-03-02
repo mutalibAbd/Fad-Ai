@@ -39,12 +39,21 @@ const iconMap: Record<string, LucideIcon> = {
   Users,
 };
 
+const colorMap: Record<string, string> = {
+  blue: 'bg-blue-500',
+  purple: 'bg-purple-500',
+  green: 'bg-green-500',
+  orange: 'bg-orange-500',
+  red: 'bg-red-500',
+  teal: 'bg-teal-500',
+};
+
 interface SupportSectionProps {
   supportTypes: SupportType[];
   title?: string;
 }
 
-export default function SupportSection({ supportTypes, title = 'Dəstək' }: SupportSectionProps) {
+export default function SupportSection({ supportTypes, title = 'D\u0259st\u0259k' }: SupportSectionProps) {
   // Filter out any DB-driven FAQ entry to avoid duplicates with the hardcoded one
   const filteredTypes = supportTypes.filter(
     (type) => type.slug !== 'tez-tez-verilen-suallar',
@@ -57,45 +66,32 @@ export default function SupportSection({ supportTypes, title = 'Dəstək' }: Sup
           {title}
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {filteredTypes.map((type) => {
             const Icon = iconMap[type.icon] ?? Headset;
+            const bgColor = colorMap[type.color ?? ''] ?? 'bg-blue-500';
             return (
               <Link
                 key={type.id}
-                href="/contact"
-                className="text-center space-y-5 w-64 group"
+                href={`/support/${type.slug}`}
+                className="bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 text-center"
               >
-                <div className="flex justify-center">
-                  <Icon className="w-14 h-14 text-text-primary dark:text-slate-300 group-hover:text-primary transition-colors duration-200" strokeWidth={1.8} />
+                <div
+                  className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${bgColor}`}
+                >
+                  <Icon className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold tracking-tight text-text-primary group-hover:text-primary transition-colors duration-200">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                   {type.title}
                 </h3>
                 {type.description && (
-                  <p className="text-base text-slate-600 dark:text-slate-400 tracking-tight leading-relaxed max-w-xs mx-auto">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {type.description}
                   </p>
                 )}
               </Link>
             );
           })}
-
-          {/* FAQ card — always visible, not admin-controlled
-          <Link
-            href="/faq"
-            className="text-center space-y-5 w-64 group"
-          >
-            <div className="flex justify-center">
-              <HelpCircle className="w-14 h-14 text-text-primary dark:text-slate-300 group-hover:text-primary transition-colors duration-200" strokeWidth={1.8} />
-            </div>
-            <h3 className="text-xl font-bold tracking-tight text-text-primary group-hover:text-primary transition-colors duration-200">
-              Tez-tez Verilən Suallar
-            </h3>
-            <p className="text-base text-slate-600 dark:text-slate-400 tracking-tight leading-relaxed max-w-xs mx-auto">
-              Ən çox soruşulan suallar vəcavabları
-            </p>
-          </Link> */}
         </div>
       </div>
     </section>

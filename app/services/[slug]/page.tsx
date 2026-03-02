@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { getServiceBySlug, getAllServiceSlugs } from '@/lib/queries/services';
 import { getVisiblePageBlocks } from '@/lib/queries/page-blocks';
 import { BlockRenderer } from '@/components/sections/page-blocks';
+import { TrendingUp, Check } from 'lucide-react';
 
 export const revalidate = 60;
 
@@ -42,7 +43,21 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
     notFound();
   }
 
-  const details = Array.isArray(service.details) ? service.details as string[] : [];
+  // Parse details JSON — structured object or legacy string array
+  let detailsData: {
+    stats?: { value: string; label: string }[];
+    features?: string[];
+    advantages?: string[];
+    details_list?: string[];
+  } = {};
+  let legacyDetails: string[] = [];
+
+  if (service.details && typeof service.details === 'object' && !Array.isArray(service.details)) {
+    detailsData = service.details as typeof detailsData;
+  } else if (Array.isArray(service.details)) {
+    legacyDetails = service.details as string[];
+  }
+
   const blocks = await getVisiblePageBlocks(`services/${slug}`);
 
   return (
@@ -97,24 +112,127 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
           </div>
         </section>
 
-        {/* Details List */}
-        {details.length > 0 && (
-          <section className="py-16 bg-background-light">
-            <div className="max-w-4xl mx-auto px-6">
-              <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
-                Təfərrüatlar
-              </h2>
-              <ul className="space-y-4">
-                {details.map((detail, i) => (
-                  <li key={i} className="flex items-start text-text-secondary tracking-tight">
-                    <span className="w-2 h-2 rounded-full bg-primary mt-2 mr-4 flex-shrink-0" />
-                    <span className="text-lg leading-relaxed">{detail}</span>
-                  </li>
+        {/* Stats Bar */}
+        {detailsData.stats && detailsData.stats.length > 0 && (
+          <section className="bg-blue-600 text-white py-6">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                {detailsData.stats.map((stat, i) => (
+                  <div key={i}>
+                    <div className="text-3xl font-bold">{stat.value}</div>
+                    <div className="text-sm opacity-80">{stat.label}</div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </section>
         )}
+
+        {/* Main Content: 2-column layout */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Left Column */}
+              <div className="lg:col-span-2 space-y-12">
+                {/* About the service */}
+                {service.content && (
+                  <div>
+                    <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-6">
+                      Xidmət haqqında
+                    </h2>
+                    <p className="text-lg text-text-secondary leading-relaxed whitespace-pre-line">
+                      {service.content}
+                    </p>
+                  </div>
+                )}
+
+                {/* Features checkmark grid */}
+                {detailsData.features && detailsData.features.length > 0 && (
+                  <div>
+                    <h3 className="text-2xl font-semibold tracking-tight text-text-primary mb-6">
+                      Xüsusiyyətlər
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {detailsData.features.map((feature, i) => (
+                        <div key={i} className="flex items-start gap-3">
+                          <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-text-secondary tracking-tight">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Advantages list */}
+                {detailsData.advantages && detailsData.advantages.length > 0 && (
+                  <div>
+                    <h3 className="text-2xl font-semibold tracking-tight text-text-primary mb-6">
+                      Üstünlüklər
+                    </h3>
+                    <div className="space-y-4">
+                      {detailsData.advantages.map((advantage, i) => (
+                        <div
+                          key={i}
+                          className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-4 flex items-start gap-4"
+                        >
+                          <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-text-secondary tracking-tight">{advantage}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Legacy details list (old string[] format) */}
+                {legacyDetails.length > 0 && (
+                  <div>
+                    <h2 className="text-3xl font-semibold tracking-tight text-text-primary mb-8">
+                      Təfərrüatlar
+                    </h2>
+                    <ul className="space-y-4">
+                      {legacyDetails.map((detail, i) => (
+                        <li key={i} className="flex items-start text-text-secondary tracking-tight">
+                          <span className="w-2 h-2 rounded-full bg-primary mt-2 mr-4 flex-shrink-0" />
+                          <span className="text-lg leading-relaxed">{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column — Sticky Sidebar */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-24">
+                  <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-6 text-white">
+                    <h3 className="text-xl font-semibold mb-3">Xidməti sınayın</h3>
+                    <p className="text-sm text-white/80 mb-6 leading-relaxed">
+                      {service.description || 'Bu xidmət haqqında ətraflı məlumat almaq və sınaqdan keçirmək üçün bizimlə əlaqə saxlayın.'}
+                    </p>
+                    <Link
+                      href="/contact"
+                      className="block w-full text-center bg-white text-gray-900 font-medium px-6 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      Əlaqə saxlayın
+                    </Link>
+
+                    {/* Top 3 features in sidebar */}
+                    {detailsData.features && detailsData.features.length > 0 && (
+                      <ul className="mt-6 space-y-3">
+                        {detailsData.features.slice(0, 3).map((feature, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-white/90">
+                            <Check className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Dynamic Page Blocks */}
         {blocks.map((block, index) => (
@@ -137,7 +255,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
               >
                 Əlaqə Saxlayın
               </Link>
-              
+
             </div>
           </div>
         </section>

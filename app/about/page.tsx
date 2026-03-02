@@ -2,10 +2,11 @@ import { GlassHeader, SoftCard } from '@/components/ui';
 import Footer from '@/components/ui/Footer';
 import Image from 'next/image';
 import { PersonIcon } from '@/components/icons';
-import { getSocialLinks } from '@/lib/queries/site-settings';
+import { getSocialLinks, getAchievements } from '@/lib/queries/site-settings';
 import { getVisibleTeamMembers } from '@/lib/queries/team';
 import { getVisiblePageBlocks } from '@/lib/queries/page-blocks';
 import { BlockRenderer } from '@/components/sections/page-blocks';
+import AchievementsSection from '@/components/ui/AchievementsSection';
 
 export const metadata = {
   title: 'Haqqımızda | FADAI',
@@ -15,10 +16,11 @@ export const metadata = {
 export const revalidate = 3600;
 
 export default async function AboutPage() {
-  const [blocks, teamMembers, socialLinks] = await Promise.all([
+  const [blocks, teamMembers, socialLinks, achievements] = await Promise.all([
     getVisiblePageBlocks('about'),
     getVisibleTeamMembers(),
     getSocialLinks(),
+    getAchievements(),
   ]);
 
   return (
@@ -47,6 +49,9 @@ export default async function AboutPage() {
         {blocks.map((block, index) => (
           <BlockRenderer key={block.id} block={block} index={index} />
         ))}
+
+        {/* Achievements */}
+        <AchievementsSection achievements={achievements} />
 
         {/* Team Members */}
         {teamMembers.length > 0 && (

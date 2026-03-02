@@ -386,6 +386,7 @@ export interface Database {
           description: string | null
           content: string | null
           icon: string
+          color: string | null
           image_url: string | null
           sort_order: number
           is_visible: boolean
@@ -399,6 +400,7 @@ export interface Database {
           description?: string | null
           content?: string | null
           icon?: string
+          color?: string | null
           image_url?: string | null
           sort_order?: number
           is_visible?: boolean
@@ -410,6 +412,7 @@ export interface Database {
           description?: string | null
           content?: string | null
           icon?: string
+          color?: string | null
           image_url?: string | null
           sort_order?: number
           is_visible?: boolean

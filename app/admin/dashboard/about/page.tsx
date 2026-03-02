@@ -1,8 +1,10 @@
 import { createAdminClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
 import { getAllPageBlocks } from '@/lib/queries/page-blocks';
+import { getAchievements } from '@/lib/queries/site-settings';
 import PageBlocksEditorClient from '@/components/admin/PageBlocksEditorClient';
 import TeamMembersEditorClient from './TeamMembersEditorClient';
+import AchievementsEditorClient from './AchievementsEditorClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +14,10 @@ export const metadata = {
 
 export default async function AdminAboutPage() {
   const supabase = createAdminClient();
-  const blocks = await getAllPageBlocks('about');
+  const [blocks, achievements] = await Promise.all([
+    getAllPageBlocks('about'),
+    getAchievements(),
+  ]);
   const { data: teamMembers } = await supabase
     .from('team_members')
     .select('*')
@@ -25,6 +30,7 @@ export default async function AdminAboutPage() {
       </h1>
       <div className="space-y-10 max-w-2xl">
         <PageBlocksEditorClient initialBlocks={blocks} pageSlug="about" />
+        <AchievementsEditorClient achievements={achievements} />
         <TeamMembersEditorClient teamMembers={teamMembers ?? []} />
       </div>
     </div>

@@ -42,3 +42,22 @@ export async function getAllNewsSlugs(): Promise<string[]> {
 
   return (data || []).map((n: { slug: string }) => n.slug)
 }
+
+export async function getRelatedNews(currentSlug: string, limit: number = 3): Promise<News[]> {
+  const supabase = createAdminClient()
+
+  const { data, error } = await (supabase
+    .from('news') as any)
+    .select('*')
+    .eq('is_visible', true)
+    .neq('slug', currentSlug)
+    .order('published_at', { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    console.error('Error fetching related news:', error)
+    return []
+  }
+
+  return data || []
+}

@@ -24,14 +24,20 @@ export interface ServiceCategoryWithServices extends ServiceCategory {
   services: Service[]
 }
 
+export interface HeroSlide {
+  subtitle: string
+  title: string
+  description: string
+  background_image: string
+}
+
 export interface HeroContent {
-  headline: string
-  subheadline: string
+  slides: HeroSlide[]
   cta_primary_text: string
   cta_primary_url: string
   cta_secondary_text: string
   cta_secondary_url: string
-  background_images: string[]
+  background_images: string[] // backward compat
 }
 
 export interface AboutContent {
@@ -43,6 +49,7 @@ export interface AboutContent {
 export interface AboutStat {
   label: string
   value: string
+  icon?: string
 }
 
 export interface ContactInfo {
@@ -128,14 +135,43 @@ export interface SectionTitles {
   support: string
 }
 
+export interface FooterLink {
+  label: string
+  url: string
+}
+
 export interface FooterContent {
   tagline: string
   copyright: string
+  quick_links: FooterLink[]
 }
 
 export interface FAQItem {
   question: string
   answer: string
+}
+
+// ── New Section Types ──
+
+export interface AchievementItem {
+  icon: string
+  text: string
+}
+
+export interface ContactCTAContent {
+  title: string
+  subtitle: string
+  cta_text: string
+  phone_text: string
+}
+
+// ── Service/Product Detail Types ──
+
+export interface ServiceDetailData {
+  stats: StatItem[]
+  features: string[]
+  advantages: string[]
+  details_list: string[]
 }
 
 // ── Page Block Types ──

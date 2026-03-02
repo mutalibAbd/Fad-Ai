@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { HeroSlide } from '@/lib/types';
 
 const gradients = [
   'linear-gradient(135deg, #1e3a5f 0%, #2B59FF 50%, #4a90d9 100%)',
@@ -12,30 +13,38 @@ const gradients = [
 ];
 
 interface HeroSectionProps {
-  headline?: string;
-  subheadline?: string;
-  ctaText?: string;
-  ctaUrl?: string;
-  backgroundImages?: string[];
+  slides?: HeroSlide[];
+  ctaPrimaryText?: string;
+  ctaPrimaryUrl?: string;
+  ctaSecondaryText?: string;
+  ctaSecondaryUrl?: string;
 }
 
 export default function HeroSection({
-  headline = 'Radiologiyada Rəqəmsal Simfoniya',
-  subheadline = 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi — innovativ süni intellekt texnologiyası ilə diaqnostikanın gələcəyini formalaşdırırıq.',
-  ctaText = 'Ödənişsiz konsultasiyadan keç',
-  ctaUrl = '/contact',
-  backgroundImages,
+  slides = [],
+  ctaPrimaryText = 'Başlamaq',
+  ctaPrimaryUrl = '/contact',
+  ctaSecondaryText = 'Ətraflı Məlumat',
+  ctaSecondaryUrl = '/about',
 }: HeroSectionProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mounted, setMounted] = useState(false);
 
-  const images = useMemo(
-    () => (backgroundImages ?? []).filter((url) => url.trim() !== ''),
-    [backgroundImages],
-  );
-  const hasImages = images.length > 0;
-  const slides = hasImages ? images : gradients;
-  const slideCount = slides.length;
+  const displaySlides = useMemo(() => {
+    if (slides.length === 0) {
+      return [
+        {
+          subtitle: 'Süni İntellekt ilə',
+          title: 'Tibbi Görüntüləmə',
+          description: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi - innovativ süni intellekt texnologiyası',
+          background_image: '',
+        },
+      ];
+    }
+    return slides;
+  }, [slides]);
+
+  const slideCount = displaySlides.length;
 
   const next = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slideCount);
@@ -49,24 +58,26 @@ export default function HeroSection({
     setMounted(true);
   }, []);
 
-  // Auto-advance every 5 seconds
   useEffect(() => {
     if (slideCount <= 1) return;
     const timer = setInterval(next, 5000);
     return () => clearInterval(timer);
   }, [next, slideCount]);
 
+  const currentSlideData = displaySlides[currentSlide];
+  const hasImage = currentSlideData?.background_image?.trim();
+
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Background: uploaded images or gradient crossfade */}
+    <section className="relative h-[600px] md:h-[700px] flex items-center overflow-hidden">
+      {/* Background: per-slide image or gradient */}
       <AnimatePresence mode="popLayout">
         <motion.div
           key={currentSlide}
           className="absolute inset-0 -z-10 bg-cover bg-center"
           style={
-            hasImages
-              ? { backgroundImage: `url(${images[currentSlide]})` }
-              : { background: gradients[currentSlide] }
+            hasImage
+              ? { backgroundImage: `url(${currentSlideData.background_image})` }
+              : { background: gradients[currentSlide % gradients.length] }
           }
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -75,83 +86,107 @@ export default function HeroSection({
         />
       </AnimatePresence>
 
-      {/* Left-to-right dark gradient overlay for text readability */}
-      <div
-        className="absolute inset-0 -z-[5]"
-        style={{
-          background: 'linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.2) 100%)',
-        }}
-      />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 -z-[5] bg-gradient-to-r from-black/70 to-black/40" />
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-24 md:py-32 w-full">
-        <div className="max-w-2xl text-center md:text-left">
-          {/* H1 — Large, bold, impactful */}
-          <h1
-            className={`text-4xl sm:text-5xl md:text-[3.5rem] lg:text-[4rem] font-extrabold text-white mb-6 leading-[1.1] tracking-tight transition-all duration-700 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            {headline}
-          </h1>
+      <div className="max-w-7xl mx-auto px-6 w-full">
+        <div className="max-w-2xl">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`content-${currentSlide}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Subtitle */}
+              {currentSlideData.subtitle && (
+                <p
+                  className={`text-blue-400 text-lg md:text-xl font-medium mb-4 transition-all duration-700 ${
+                    mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                  }`}
+                >
+                  {currentSlideData.subtitle}
+                </p>
+              )}
 
-          {/* Description — wider leading, silver tone */}
-          <p
-            className={`text-base sm:text-lg md:text-xl text-gray-200 max-w-xl leading-[1.6] mb-8 transition-all duration-700 delay-200 mx-auto md:mx-0 ${
-              mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
-            {subheadline}
-          </p>
+              {/* Title */}
+              <h1
+                className={`text-4xl md:text-6xl font-bold text-white mb-6 leading-tight transition-all duration-700 ${
+                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+                }`}
+              >
+                {currentSlideData.title}
+              </h1>
 
-          {/* CTA Button — directly below paragraph */}
+              {/* Description */}
+              <p
+                className={`text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed transition-all duration-700 delay-200 ${
+                  mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+              >
+                {currentSlideData.description}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* CTA Buttons */}
           <div
-            className={`flex justify-center md:justify-start transition-all duration-700 delay-[400ms] ${
+            className={`flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-[400ms] ${
               mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'
             }`}
           >
             <Link
-              href={ctaUrl}
-              className="group inline-flex items-center gap-2 bg-white text-slate-900 px-8 py-4 rounded-xl font-semibold tracking-tight hover:bg-gray-100 hover:-translate-y-0.5 transition-all duration-200 shadow-lg text-base"
+              href={ctaPrimaryUrl}
+              className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold tracking-tight transition-all duration-200 shadow-lg text-base"
             >
-              {ctaText}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+              {ctaPrimaryText}
+            </Link>
+            <Link
+              href={ctaSecondaryUrl}
+              className="inline-flex items-center justify-center gap-2 bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold tracking-tight border border-white/30 hover:bg-white/30 transition-all duration-200 text-base"
+            >
+              {ctaSecondaryText}
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Manual slide controls */}
+      {/* Navigation arrows */}
       {slideCount > 1 && (
-      <div className="absolute bottom-8 left-6 flex items-center gap-3">
-        <button
-          onClick={prev}
-          className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-          aria-label="Əvvəlki slayd"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
-          onClick={next}
-          className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors"
-          aria-label="Növbəti slayd"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-        {/* Slide indicators */}
-        <div className="flex gap-2 ml-2">
-          {slides.map((_, i) => (
+        <>
+          <button
+            onClick={prev}
+            className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            aria-label="Əvvəlki slayd"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={next}
+            className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors"
+            aria-label="Növbəti slayd"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </>
+      )}
+
+      {/* Slide indicators */}
+      {slideCount > 1 && (
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+          {displaySlides.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
               className={`h-2 rounded-full transition-all duration-300 ${
-                i === currentSlide ? 'bg-white w-6' : 'bg-white/40 w-2'
+                i === currentSlide ? 'bg-blue-600 w-8' : 'bg-white/50 w-2 hover:bg-white/70'
               }`}
               aria-label={`Slayd ${i + 1}`}
             />
           ))}
         </div>
-      </div>
       )}
     </section>
   );

@@ -40,8 +40,8 @@ export default function NewsGrid({ news }: NewsGridProps) {
             key={item.id}
             href={`/news/${item.slug}`}
             className={`
-              rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden
-              hover:shadow-md hover:-translate-y-1 transition-all duration-300
+              group rounded-xl bg-white dark:bg-slate-800 shadow-lg overflow-hidden
+              hover:shadow-xl hover:-translate-y-1 transition-all duration-300
               ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
             `}
             style={{
@@ -49,24 +49,24 @@ export default function NewsGrid({ news }: NewsGridProps) {
             }}
           >
             {/* Image */}
-            <div className="relative aspect-[4/3]">
+            <div className="relative h-56 overflow-hidden">
               {item.image_url ? (
                 <Image
                   src={item.image_url}
                   alt={item.title}
                   fill
-                  className="object-cover"
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/5" />
+                <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900" />
               )}
             </div>
 
             {/* Content */}
             <div className="p-6">
               {/* Date */}
-              <time className="text-xs font-medium text-text-secondary tracking-wide uppercase">
+              <time className="text-sm text-gray-500 dark:text-gray-400">
                 {new Date(item.published_at).toLocaleDateString('az-AZ', {
                   year: 'numeric',
                   month: 'long',
@@ -75,20 +75,20 @@ export default function NewsGrid({ news }: NewsGridProps) {
               </time>
 
               {/* Title */}
-              <h3 className="text-lg font-semibold tracking-tight text-text-primary mt-2 mb-2 line-clamp-2">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mt-2 mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                 {item.title}
               </h3>
 
               {/* Summary */}
               {item.summary && (
-                <p className="text-sm text-text-secondary tracking-tight leading-relaxed line-clamp-3">
+                <p className="text-gray-600 dark:text-gray-400 line-clamp-3 mb-4">
                   {item.summary}
                 </p>
               )}
 
               {/* Read more indicator */}
-              <span className="inline-block mt-4 text-sm font-medium text-primary tracking-tight">
-                Davamını oxu &rarr;
+              <span className="text-blue-600 dark:text-blue-400 font-medium text-sm">
+                Oxu →
               </span>
             </div>
           </Link>

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Json } from '@/lib/supabase/database.types'
 import type {
   HeroContent,
+  HeroSlide,
   AboutContent,
   AboutStat,
   ContactInfo,
@@ -15,6 +16,8 @@ import type {
   SectionTitles,
   FooterContent,
   FAQItem,
+  AchievementItem,
+  ContactCTAContent,
 } from '@/lib/types'
 
 export async function getSiteSetting(key: string): Promise<Json | null> {
@@ -35,9 +38,16 @@ export async function getSiteSetting(key: string): Promise<Json | null> {
 
 export async function getHeroContent(): Promise<HeroContent> {
   const value = await getSiteSetting('hero')
+  const defaultSlides: HeroSlide[] = [
+    {
+      subtitle: 'Süni İntellekt ilə',
+      title: 'Tibbi Görüntüləmə',
+      description: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi - innovativ süni intellekt texnologiyası',
+      background_image: '',
+    },
+  ]
   const defaults: HeroContent = {
-    headline: 'Radiologiyada Rəqəmsal Simfoniya',
-    subheadline: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi - innovativ süni intellekt texnologiyası',
+    slides: defaultSlides,
     cta_primary_text: 'Başlamaq',
     cta_primary_url: '/contact',
     cta_secondary_text: 'Ətraflı Məlumat',
@@ -59,10 +69,34 @@ export async function getHeroContent(): Promise<HeroContent> {
     backgroundImages = [raw.background_image as string]
   }
 
+  // Parse slides - support new slides array or migrate from old flat format
+  let slides: HeroSlide[] = defaultSlides
+  if (Array.isArray(raw.slides) && raw.slides.length > 0) {
+    slides = (raw.slides as Record<string, unknown>[]).map((s) => ({
+      subtitle: (s.subtitle as string) || '',
+      title: (s.title as string) || '',
+      description: (s.description as string) || '',
+      background_image: (s.background_image as string) || '',
+    }))
+  } else if (raw.headline) {
+    // Migrate from old flat format: create slides from headline + background_images
+    slides = backgroundImages.length > 0
+      ? backgroundImages.map((img, i) => ({
+          subtitle: i === 0 ? 'Süni İntellekt ilə' : '',
+          title: (raw.headline as string) || defaults.slides[0].title,
+          description: (raw.subheadline as string) || defaults.slides[0].description,
+          background_image: img,
+        }))
+      : [{
+          subtitle: 'Süni İntellekt ilə',
+          title: (raw.headline as string) || defaults.slides[0].title,
+          description: (raw.subheadline as string) || defaults.slides[0].description,
+          background_image: '',
+        }]
+  }
+
   return {
-    ...defaults,
-    headline: (raw.headline as string) || defaults.headline,
-    subheadline: (raw.subheadline as string) || defaults.subheadline,
+    slides,
     cta_primary_text: (raw.cta_primary_text as string) || defaults.cta_primary_text,
     cta_primary_url: (raw.cta_primary_url as string) || defaults.cta_primary_url,
     cta_secondary_text: (raw.cta_secondary_text as string) || defaults.cta_secondary_text,
@@ -255,13 +289,23 @@ export async function getFooterContent(): Promise<FooterContent> {
   const defaults: FooterContent = {
     tagline: 'Tibbi görüntüləmədə dəqiqliyin orkestrləşdirilməsi',
     copyright: 'FADAI. Bütün hüquqlar qorunur.',
+    quick_links: [
+      { label: 'Haqqımızda', url: '/about' },
+      { label: 'Xəbərlər', url: '/news' },
+      { label: 'Dəstək', url: '/support' },
+    ],
   }
 
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return defaults
   }
 
-  return { ...defaults, ...(value as Record<string, string>) }
+  const raw = value as Record<string, unknown>
+  return {
+    tagline: (raw.tagline as string) || defaults.tagline,
+    copyright: (raw.copyright as string) || defaults.copyright,
+    quick_links: Array.isArray(raw.quick_links) ? (raw.quick_links as FooterContent['quick_links']) : defaults.quick_links,
+  }
 }
 
 export async function getFAQItems(): Promise<FAQItem[]> {
@@ -272,4 +316,30 @@ export async function getFAQItems(): Promise<FAQItem[]> {
   }
 
   return value as unknown as FAQItem[]
+}
+
+export async function getAchievements(): Promise<AchievementItem[]> {
+  const value = await getSiteSetting('achievements')
+
+  if (!value || !Array.isArray(value)) {
+    return []
+  }
+
+  return value as unknown as AchievementItem[]
+}
+
+export async function getContactCTAContent(): Promise<ContactCTAContent> {
+  const value = await getSiteSetting('homepage_contact_cta')
+  const defaults: ContactCTAContent = {
+    title: 'Bizimlə əlaqə saxlayın',
+    subtitle: 'Komandamız sizə kömək etməyə hazırdır. Pulsuz konsultasiya alın.',
+    cta_text: 'Əlaqə Formu',
+    phone_text: 'Zəng edin',
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return defaults
+  }
+
+  return { ...defaults, ...(value as Record<string, string>) }
 }

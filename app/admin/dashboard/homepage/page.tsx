@@ -1,8 +1,10 @@
 import {
   getHeroContent,
   getAboutPreviewContent,
+  getAboutStats,
   getSectionTitles,
   getFooterContent,
+  getContactCTAContent,
 } from '@/lib/queries/site-settings';
 import HomepageEditorClient from './HomepageEditorClient';
 
@@ -13,11 +15,13 @@ export const metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function AdminHomepagePage() {
-  const [hero, aboutPreview, sectionTitles, footerContent] = await Promise.all([
+  const [hero, aboutPreview, aboutStats, sectionTitles, footerContent, contactCTA] = await Promise.all([
     getHeroContent(),
     getAboutPreviewContent(),
+    getAboutStats(),
     getSectionTitles(),
     getFooterContent(),
+    getContactCTAContent(),
   ]);
 
   return (
@@ -28,8 +32,10 @@ export default async function AdminHomepagePage() {
       <HomepageEditorClient
         hero={hero}
         aboutPreview={aboutPreview}
+        aboutStats={aboutStats}
         sectionTitles={sectionTitles}
         footerContent={footerContent}
+        contactCTA={contactCTA}
       />
     </div>
   );

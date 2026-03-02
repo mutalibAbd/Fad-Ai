@@ -6,12 +6,16 @@ import FormField from '@/components/admin/FormField';
 import ImageUpload from '@/components/admin/ImageUpload';
 import type {
   HeroContent,
+  HeroSlide,
   AboutPreviewContent,
+  AboutStat,
   SectionTitles,
   FooterContent,
+  FooterLink,
+  ContactCTAContent,
 } from '@/lib/types';
 
-// ─── UI Helpers (module-level to avoid re-mount on every render) ───
+// ─── UI Helpers ───
 
 function SaveButton({ onClick, label, loading }: { onClick: () => void; label: string; loading: boolean }) {
   return (
@@ -35,40 +39,61 @@ function SectionCard({ title, children }: { title: string; children: React.React
   );
 }
 
+function SmallButton({ onClick, label, variant = 'default' }: { onClick: () => void; label: string; variant?: 'default' | 'danger' }) {
+  const cls = variant === 'danger'
+    ? 'text-red-600 hover:text-red-800 border-red-200 hover:border-red-300'
+    : 'text-text-secondary hover:text-text-primary border-slate-200 hover:border-slate-300';
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`px-3 py-1.5 rounded-lg border text-xs font-medium tracking-tight transition-colors ${cls}`}
+    >
+      {label}
+    </button>
+  );
+}
+
 // ─── Main Component ───
 
 interface Props {
   hero: HeroContent;
   aboutPreview: AboutPreviewContent;
+  aboutStats: AboutStat[];
   sectionTitles: SectionTitles;
   footerContent: FooterContent;
+  contactCTA: ContactCTAContent;
 }
 
 export default function HomepageEditorClient({
   hero,
   aboutPreview,
+  aboutStats: initialStats,
   sectionTitles,
   footerContent,
+  contactCTA: initialContactCTA,
 }: Props) {
   const router = useRouter();
 
-  // ─── Hero State ───
-  const [headline, setHeadline] = useState(hero.headline);
-  const [subheadline, setSubheadline] = useState(hero.subheadline);
+  // ─── Hero State (slide-based) ───
+  const [slides, setSlides] = useState<HeroSlide[]>(hero.slides);
   const [ctaPrimaryText, setCtaPrimaryText] = useState(hero.cta_primary_text);
   const [ctaPrimaryUrl, setCtaPrimaryUrl] = useState(hero.cta_primary_url);
+  const [ctaSecondaryText, setCtaSecondaryText] = useState(hero.cta_secondary_text);
+  const [ctaSecondaryUrl, setCtaSecondaryUrl] = useState(hero.cta_secondary_url);
 
-  // Pad to 3 slots
-  const initialImages = [...hero.background_images];
-  while (initialImages.length < 3) initialImages.push('');
-  const [heroImages, setHeroImages] = useState<string[]>(initialImages);
+  const updateSlide = (index: number, field: keyof HeroSlide, value: string) => {
+    setSlides((prev) => prev.map((s, i) => i === index ? { ...s, [field]: value } : s));
+  };
 
-  const updateHeroImage = (index: number, url: string) => {
-    setHeroImages((prev) => {
-      const next = [...prev];
-      next[index] = url;
-      return next;
-    });
+  const addSlide = () => {
+    if (slides.length >= 5) return;
+    setSlides((prev) => [...prev, { subtitle: '', title: '', description: '', background_image: '' }]);
+  };
+
+  const removeSlide = (index: number) => {
+    if (slides.length <= 1) return;
+    setSlides((prev) => prev.filter((_, i) => i !== index));
   };
 
   // ─── Section Titles State ───
@@ -79,12 +104,48 @@ export default function HomepageEditorClient({
 
   // ─── About Preview State ───
   const [apTitle, setApTitle] = useState(aboutPreview.title);
+  const [apDescription, setApDescription] = useState(aboutPreview.description);
+  const [apImageUrl, setApImageUrl] = useState(aboutPreview.image_url);
   const [apCtaText, setApCtaText] = useState(aboutPreview.cta_text);
   const [apCtaUrl, setApCtaUrl] = useState(aboutPreview.cta_url);
+
+  // ─── About Stats State ───
+  const [stats, setStats] = useState<AboutStat[]>(initialStats);
+
+  const updateStat = (index: number, field: keyof AboutStat, value: string) => {
+    setStats((prev) => prev.map((s, i) => i === index ? { ...s, [field]: value } : s));
+  };
+
+  const addStat = () => {
+    setStats((prev) => [...prev, { label: '', value: '', icon: '' }]);
+  };
+
+  const removeStat = (index: number) => {
+    setStats((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // ─── Contact CTA State ───
+  const [ctaTitle, setCtaTitle] = useState(initialContactCTA.title);
+  const [ctaSubtitle, setCtaSubtitle] = useState(initialContactCTA.subtitle);
+  const [ctaCtaText, setCtaCtaText] = useState(initialContactCTA.cta_text);
+  const [ctaPhoneText, setCtaPhoneText] = useState(initialContactCTA.phone_text);
 
   // ─── Footer State ───
   const [ftTagline, setFtTagline] = useState(footerContent.tagline);
   const [ftCopyright, setFtCopyright] = useState(footerContent.copyright);
+  const [ftQuickLinks, setFtQuickLinks] = useState<FooterLink[]>(footerContent.quick_links);
+
+  const updateQuickLink = (index: number, field: keyof FooterLink, value: string) => {
+    setFtQuickLinks((prev) => prev.map((l, i) => i === index ? { ...l, [field]: value } : l));
+  };
+
+  const addQuickLink = () => {
+    setFtQuickLinks((prev) => [...prev, { label: '', url: '' }]);
+  };
+
+  const removeQuickLink = (index: number) => {
+    setFtQuickLinks((prev) => prev.filter((_, i) => i !== index));
+  };
 
   // ─── Global State ───
   const [loading, setLoading] = useState(false);
@@ -117,13 +178,12 @@ export default function HomepageEditorClient({
   // ─── Section Handlers ───
   const handleSaveHero = () =>
     saveSetting('hero', {
-      headline,
-      subheadline,
+      slides,
       cta_primary_text: ctaPrimaryText,
       cta_primary_url: ctaPrimaryUrl,
-      cta_secondary_text: hero.cta_secondary_text,
-      cta_secondary_url: hero.cta_secondary_url,
-      background_images: heroImages.filter((url) => url.trim() !== ''),
+      cta_secondary_text: ctaSecondaryText,
+      cta_secondary_url: ctaSecondaryUrl,
+      background_images: slides.map((s) => s.background_image).filter(Boolean),
     }, 'Hero bölməsi yeniləndi');
 
   const handleSaveSectionTitles = () =>
@@ -137,16 +197,28 @@ export default function HomepageEditorClient({
   const handleSaveAboutPreview = () =>
     saveSetting('about_preview', {
       title: apTitle,
-      description: aboutPreview.description,
-      image_url: aboutPreview.image_url,
+      description: apDescription,
+      image_url: apImageUrl,
       cta_text: apCtaText,
       cta_url: apCtaUrl,
     }, 'Haqqımızda bölməsi yeniləndi');
+
+  const handleSaveAboutStats = () =>
+    saveSetting('about_stats', stats.filter((s) => s.value.trim() || s.label.trim()), 'Statistikalar yeniləndi');
+
+  const handleSaveContactCTA = () =>
+    saveSetting('homepage_contact_cta', {
+      title: ctaTitle,
+      subtitle: ctaSubtitle,
+      cta_text: ctaCtaText,
+      phone_text: ctaPhoneText,
+    }, 'Əlaqə bölməsi yeniləndi');
 
   const handleSaveFooter = () =>
     saveSetting('footer', {
       tagline: ftTagline,
       copyright: ftCopyright,
+      quick_links: ftQuickLinks.filter((l) => l.label.trim() || l.url.trim()),
     }, 'Footer yeniləndi');
 
   return (
@@ -163,32 +235,40 @@ export default function HomepageEditorClient({
       )}
 
       {/* ══════════════════════════════════════════════
-          1. HERO SECTION
+          1. HERO SECTION (Slides)
           ══════════════════════════════════════════════ */}
       <SectionCard title="Hero Bölməsi">
-        <FormField label="Başlıq" name="headline" value={headline} onChange={setHeadline} required />
-        <FormField label="Alt başlıq" name="subheadline" type="textarea" value={subheadline} onChange={setSubheadline} rows={3} />
-
-        <div>
-          <p className="text-sm font-medium text-text-primary tracking-tight mb-3">
-            Arxa plan şəkilləri (boş saxlasanız gradient göstəriləcək)
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[0, 1, 2].map((i) => (
-              <ImageUpload
-                key={i}
-                bucket="site"
-                value={heroImages[i] || ''}
-                onChange={(url) => updateHeroImage(i, url)}
-                label={`Şəkil ${i + 1}`}
-              />
-            ))}
+        {slides.map((slide, i) => (
+          <div key={i} className="border border-slate-100 rounded-xl p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-text-secondary">Slayd {i + 1}</span>
+              {slides.length > 1 && (
+                <SmallButton onClick={() => removeSlide(i)} label="Sil" variant="danger" />
+              )}
+            </div>
+            <FormField label="Alt yazı" name={`slide_subtitle_${i}`} value={slide.subtitle} onChange={(v) => updateSlide(i, 'subtitle', v)} />
+            <FormField label="Başlıq" name={`slide_title_${i}`} value={slide.title} onChange={(v) => updateSlide(i, 'title', v)} required />
+            <FormField label="Təsvir" name={`slide_desc_${i}`} type="textarea" rows={2} value={slide.description} onChange={(v) => updateSlide(i, 'description', v)} />
+            <ImageUpload
+              bucket="site"
+              value={slide.background_image}
+              onChange={(url) => updateSlide(i, 'background_image', url)}
+              label="Arxa plan şəkili"
+            />
           </div>
-        </div>
+        ))}
+
+        {slides.length < 5 && (
+          <SmallButton onClick={addSlide} label="+ Slayd əlavə et" />
+        )}
 
         <div className="grid grid-cols-2 gap-4">
-          <FormField label="CTA mətni" name="cta_primary_text" value={ctaPrimaryText} onChange={setCtaPrimaryText} />
-          <FormField label="CTA linki" name="cta_primary_url" value={ctaPrimaryUrl} onChange={setCtaPrimaryUrl} />
+          <FormField label="Əsas CTA mətni" name="cta_primary_text" value={ctaPrimaryText} onChange={setCtaPrimaryText} />
+          <FormField label="Əsas CTA linki" name="cta_primary_url" value={ctaPrimaryUrl} onChange={setCtaPrimaryUrl} />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <FormField label="İkinci CTA mətni" name="cta_secondary_text" value={ctaSecondaryText} onChange={setCtaSecondaryText} />
+          <FormField label="İkinci CTA linki" name="cta_secondary_url" value={ctaSecondaryUrl} onChange={setCtaSecondaryUrl} />
         </div>
         <SaveButton onClick={handleSaveHero} label="Hero-nu yadda saxla" loading={loading} />
       </SectionCard>
@@ -209,6 +289,8 @@ export default function HomepageEditorClient({
           ══════════════════════════════════════════════ */}
       <SectionCard title="Haqqımızda Bölməsi">
         <FormField label="Başlıq" name="ap_title" value={apTitle} onChange={setApTitle} required />
+        <FormField label="Təsvir" name="ap_description" type="textarea" rows={3} value={apDescription} onChange={setApDescription} />
+        <ImageUpload bucket="site" value={apImageUrl} onChange={setApImageUrl} label="Bölmə şəkili" />
         <div className="grid grid-cols-2 gap-4">
           <FormField label="CTA mətni" name="ap_cta_text" value={apCtaText} onChange={setApCtaText} />
           <FormField label="CTA linki" name="ap_cta_url" value={apCtaUrl} onChange={setApCtaUrl} />
@@ -217,11 +299,78 @@ export default function HomepageEditorClient({
       </SectionCard>
 
       {/* ══════════════════════════════════════════════
-          4. FOOTER
+          4. ABOUT STATS
+          ══════════════════════════════════════════════ */}
+      <SectionCard title="Statistikalar">
+        {stats.map((stat, i) => (
+          <div key={i} className="flex items-end gap-3">
+            <div className="flex-1">
+              <FormField label="Dəyər" name={`stat_value_${i}`} value={stat.value} onChange={(v) => updateStat(i, 'value', v)} />
+            </div>
+            <div className="flex-1">
+              <FormField label="Etiket" name={`stat_label_${i}`} value={stat.label} onChange={(v) => updateStat(i, 'label', v)} />
+            </div>
+            <div className="w-28">
+              <FormField
+                label="Simvol"
+                name={`stat_icon_${i}`}
+                type="select"
+                value={stat.icon || ''}
+                onChange={(v) => updateStat(i, 'icon', v)}
+                options={[
+                  { value: '', label: 'Seçin' },
+                  { value: 'users', label: 'Users' },
+                  { value: 'target', label: 'Target' },
+                  { value: 'globe', label: 'Globe' },
+                  { value: 'award', label: 'Award' },
+                ]}
+              />
+            </div>
+            <SmallButton onClick={() => removeStat(i)} label="Sil" variant="danger" />
+          </div>
+        ))}
+        <SmallButton onClick={addStat} label="+ Statistika əlavə et" />
+        <SaveButton onClick={handleSaveAboutStats} label="Statistikaları yadda saxla" loading={loading} />
+      </SectionCard>
+
+      {/* ══════════════════════════════════════════════
+          5. CONTACT CTA
+          ══════════════════════════════════════════════ */}
+      <SectionCard title="Əlaqə Bölməsi">
+        <FormField label="Başlıq" name="cta_title" value={ctaTitle} onChange={setCtaTitle} />
+        <FormField label="Alt yazı" name="cta_subtitle" type="textarea" rows={2} value={ctaSubtitle} onChange={setCtaSubtitle} />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField label="Düymə mətni" name="cta_cta_text" value={ctaCtaText} onChange={setCtaCtaText} />
+          <FormField label="Telefon düyməsi mətni" name="cta_phone_text" value={ctaPhoneText} onChange={setCtaPhoneText} />
+        </div>
+        <SaveButton onClick={handleSaveContactCTA} label="Əlaqə bölməsini yadda saxla" loading={loading} />
+      </SectionCard>
+
+      {/* ══════════════════════════════════════════════
+          6. FOOTER
           ══════════════════════════════════════════════ */}
       <SectionCard title="Footer">
         <FormField label="Teqlayn" name="ft_tagline" value={ftTagline} onChange={setFtTagline} />
         <FormField label="Müəllif hüququ mətni" name="ft_copyright" value={ftCopyright} onChange={setFtCopyright} />
+
+        <div>
+          <p className="text-sm font-medium text-text-primary tracking-tight mb-3">
+            Sürətli keçidlər
+          </p>
+          {ftQuickLinks.map((link, i) => (
+            <div key={i} className="flex items-end gap-3 mb-2">
+              <div className="flex-1">
+                <FormField label="Ad" name={`ql_label_${i}`} value={link.label} onChange={(v) => updateQuickLink(i, 'label', v)} />
+              </div>
+              <div className="flex-1">
+                <FormField label="Link" name={`ql_url_${i}`} value={link.url} onChange={(v) => updateQuickLink(i, 'url', v)} />
+              </div>
+              <SmallButton onClick={() => removeQuickLink(i)} label="Sil" variant="danger" />
+            </div>
+          ))}
+          <SmallButton onClick={addQuickLink} label="+ Keçid əlavə et" />
+        </div>
+
         <SaveButton onClick={handleSaveFooter} label="Footer-i yadda saxla" loading={loading} />
       </SectionCard>
     </div>
